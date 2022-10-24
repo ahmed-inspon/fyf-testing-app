@@ -5,6 +5,7 @@ import {
   TextContainer,
   Image,
   Stack,
+  Select,
   Link,
   Heading,
   IndexTable,
@@ -12,7 +13,10 @@ import {
   TextStyle,
   Navigation,
   Button,
-  Icon
+  Icon,
+  FormLayout,
+  TextField,
+  Label,
 } from "@shopify/polaris";
 import {EditMinor} from '@shopify/polaris-icons';
 import { TitleBar,useNavigate } from "@shopify/app-bridge-react";
@@ -20,12 +24,13 @@ import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 
 import { trophyImage } from "../assets";
 import { ProductsCard } from "../components";
-import { useEffect, useState } from "react";
-
+import { useEffect, useState,useCallback } from "react";
+import {ColorModal} from "../components";
 export default function HomePage() {
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
 
+  const [unit,setUnit] = useState("cm");
   const [measurements,setMeasurements] = useState([]);
   const resourceName = {
     singular: 'Measurement',
@@ -46,6 +51,42 @@ export default function HomePage() {
    
     fetch_measurements();
   },[])
+
+  const [fontColor,setFontColor] = useState('#000000');
+  const [bgColor,setbgColor] = useState('#000000');
+
+  const fontColor_activator = (
+    <div
+      style={{
+        width: "100%",
+        height: "35px",
+        backgroundColor: fontColor,
+        border: "1px solid gray",
+        cursor: "pointer",
+      }}
+      onClick={() => {
+        setFontColorModal(true);
+      }}
+    />
+  );
+
+  const bgColor_activator = (
+    <div
+      style={{
+        width: "100%",
+        height: "35px",
+        backgroundColor: bgColor,
+        border: "1px solid gray",
+        cursor: "pointer",
+      }}
+      onClick={() => {
+        setbgColorModal(true);
+      }}
+    />
+  );
+  const handleUnitChange = useCallback((value) => setUnit(value), []);
+  const [fontColorModal,setFontColorModal] = useState(false);
+  const [bgColorModal,setbgColorModal] = useState(false);
 
   const {selectedResources, allResourcesSelected, handleSelectionChange} =
     useIndexResourceState(measurements,{resourceIDResolver:(row)=>{return row._id}});
@@ -72,6 +113,23 @@ export default function HomePage() {
   );
   const navigateHandler = () => {
     navigate('/create');
+  }
+
+  const handleUpdate = async()=>{
+    console.log(bgColor,fontColor,unit);
+    let obj = {unit,bgColor,fontColor};
+    const response = await fetch("/api/store_settings",{method:"POST",
+                                headers:{"accept":'application/json',
+                                         "content-type":"application/json"},
+                                body:JSON.stringify(obj)});
+    const resp = await response.json();
+        
+        if(response.ok){
+            console.log("resp",resp);
+            if(resp.success){
+              console.log(resp);
+            }
+        }
   }
   return (
     <Page narrowWidth>
@@ -109,6 +167,43 @@ export default function HomePage() {
               </IndexTable>
               </Stack.Item>
             </Stack>
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
+        <Heading>Store Settings</Heading>
+          <Card sectioned>
+            <FormLayout>
+              <Select
+                    label="Measurement Unit"
+                    options={["cm","inches"]}
+                    onChange={handleUnitChange}
+                    value={unit}
+                    helpText={<span>
+                      Default Unit Of Your Store For Measurements
+                      </span>}
+                />
+                <Label>Select Color Of Fonts</Label>
+                <ColorModal 
+                colorPickerModal={fontColorModal}
+                setColorPickerModal={() => setFontColorModal((c) => !c)}
+                activator={fontColor_activator}
+                color={fontColor}
+                onAccept={(color) => {
+                  setFontColor(color);
+                }}
+                />
+                <Label>Select Color Of Background</Label>
+                <ColorModal 
+                colorPickerModal={bgColorModal}
+                setColorPickerModal={() => setbgColorModal((c) => !c)}
+                activator={bgColor_activator}
+                color={bgColor}
+                onAccept={(color) => {
+                  setbgColor(color);
+                }}
+                />
+                <Button onClick={handleUpdate}>Update</Button>
+            </FormLayout>
           </Card>
         </Layout.Section>
       </Layout>

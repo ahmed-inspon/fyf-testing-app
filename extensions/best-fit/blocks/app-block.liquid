@@ -1,93 +1,84 @@
 
-<span class="fyf-extension" style="color: {{ block.settings.color }}">
+<span class="fyf-extension" style="color: {{ block.settings.color }}" data-store-name="{{shop.name}}">
   <!-- Button trigger modal -->
+<div id="best-fit-div">
+  <strong>We recommend you </strong> <span class="best-fit-recommended"></span> <strong>size</strong>
+</div>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Find Your Fit
+  Find Your Fit 
 </button>
 
 <!-- Modal -->
-<div class="modal active" id="fyf-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal active " id="fyf-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content bgColor">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Find Your Fit</h5>
+        <h5 class="modal-title fontColor" id="exampleModalLabel">Find Your Fit</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <section class="cart-bar p-4" id="cart-page-1">
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus nihil</p>
-          <p class="text-muted">Lorem ipsum dolor sit amet consectetur</p>
-          <p>Lorem ipsum dolor sit amet consectetur?</p>
+        <section class="cart-bar p-4 fontColor" id="cart-page-1">
+          <p>Want to buy, but you are confused about your size?</p>
+          <p>We can help you find your fit for this store.</p>
+          <p>Select your gender</p>
 
           <div class="btn-sec d-flex justify-content-around mt-5">
-              <button class="btn btn-primary btn-rounded step-1">Men</button>
-              <button class="btn btn-primary btn-rounded step-1">Women</button>
+              <button class="btn btn-primary btn-rounded step-1 fontColor" data-gender="m">Men</button>
+              <button class="btn btn-primary btn-rounded step-1 fontColor" data-gender="f">Women</button>
           </div>
       </section>
 
       <section class="cart-bar p-4" id="cart-page-2" style="display: none;">
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus nihil</p>
-          <p class="text-muted">Lorem ipsum dolor sit amet consectetur</p>
-
-         <form action="" method="post">
-
-          <div class="d-flex align-items-center"><span><small>Enter Your Collar-Sze:</small></span> <span>
-                  <!-- Material input -->
-                  <div class="md-form d-inline">
-                      <input type="number" id="collar_size" name="collar_size" class="form-control" autocomplete="off">
-                      <label for="form1">Example label</label>
-                  </div>
-                  <h6 id="valid_collar_size"></h6>
-              </span>
+          <p class="fontColor">Fill these measurements so that we can find best fit for you</p>
+          <div class="d-flex align-items-center"><span><small>Unit:</small></span> <span>
+            <!-- Material input -->
+              <input type="radio" name="unit" checked value="cm"><small class="fontColor">Centimeter</small>
+              <input type="radio" name="unit" value="in"><small class="fontColor">Inches</small>
+          </span>
           </div>
 
-          <div class="d-flex align-items-center"><span><small>Enter Your Neck:</small></span> <span>
+          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Neck:</small></span> <span>
                   <!-- Material input -->
                   <div class="md-form d-inline">
                       <input type="number" id="neck" name="neck" class="form-control" autocomplete="off">
-                      <label for="form1">Example label</label>
                   </div>
                   <h6 id="valid_neck"></h6>
               </span>
           </div>
 
-          <div class="d-flex align-items-center"><span><small>Enter Your Chest:</small></span> <span>
+          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Chest:</small></span> <span>
                   <!-- Material input -->
                   <div class="md-form d-inline">
                       <input type="number" id="chest" name="chest" class="form-control" autocomplete="off">
-                      <label for="form1">Example label</label>
                   </div>
                   <h6 id="valid_chest"></h6>
               </span>
           </div>
 
-          <div class="d-flex align-items-center"><span><small>Enter Your Waist:</small></span> <span>
+          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Waist:</small></span> <span>
                   <!-- Material input -->
                   <div class="md-form d-inline">
                       <input type="number" id="waist" name="waist" class="form-control" autocomplete="off">
-                      <label for="form1">Example label</label>
                   </div>
                   <h6 id="valid_waist"></h6>
               </span>
           </div>
 
-          <div class="d-flex align-items-center"><span><small>Enter Your Hip:</small></span> <span>
+          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Hip:</small></span> <span>
                   <!-- Material input -->
                   <div class="md-form d-inline">
-                      <input type="number" id="hip" name="hip" class="form-control" autocomplete="off">
-                      <label for="form1">Example label</label>
+                      <input type="number" id="hips" name="hips" class="form-control" autocomplete="off">
                   </div>
-                  <h6 id="valid_hip"></h6>
+                  <h6 id="valid_hips"></h6>
               </span>
           </div>
 
-          <div class="d-flex align-items-center"><span><small>Enter Your Height:</small></span> <span>
+          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Pant Length:</small></span> <span>
                   <!-- Material input -->
                   <div class="md-form d-inline">
-                      <input type="number" id="height" name="height" class="form-control" autocomplete="off">
-                      <label for="form1">Example label</label>
+                      <input type="number" id="pant" name="pant" class="form-control" autocomplete="off">
                   </div>
                   <h6 id="valid_height"></h6>
               </span>
@@ -101,17 +92,14 @@
               <button id="step-2" class="btn btn-primary btn-rounded">Next</button>
           </div>
 
-          </form>
       </section>
 
       <section class="cart-bar" id="cart-page-3" style="display: none;">
           <div class="text-center cart-thank-sec">
-              <h2 class="text-uppercase">Thank You!</h2>
-              <div class="icon-sec">
-                  <i class="fas fa-check-circle text-white"></i>
-              </div>
-              <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis nostrum aliquam ullam quia
-                  placeat magni et</p>
+              <h2 class="text-uppercase fontColor">Our Recommendation</h2>
+              <strong class="fontColor">We recommend you </strong> <span class="best-fit-recommended"></span> <strong>size</strong>
+              <br>
+              <i class="fontColor">This size is recommended by matching your body measurement with stores defined measurement of their clothing</i>
 
           </div>
 
@@ -119,17 +107,15 @@
               <img class="img-fluid" src="" alt="">
           </div>
           <div class="btn-sec d-flex justify-content-around mt-5">
-              <button class="btn btn-primary btn-rounded px-4 step-3"><i class="fas fa-user mr-2"></i> Save
-                  Profile</button>
-              <button class="btn btn-primary btn-rounded px-4 step-3"><i class="fas fa-redo mr-2"></i> Start
+              <button class="btn btn-primary btn-rounded px-4 step-3 fontColor"><i class="fas fa-redo mr-2"></i> Start
                   Again</button>
           </div>
       </section>
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary fontColor" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary fontColor">Save changes</button>
       </div>
     </div>
   </div>

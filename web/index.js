@@ -15,6 +15,7 @@ import redirectToAuth from "./helpers/redirect-to-auth.js";
 import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 import measurements from "./models/measurements.js";
+import store_settings from "./models/store_settings.js";
 const USE_ONLINE_TOKENS = false;
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -88,9 +89,9 @@ export async function createServer(
   app.set("use-online-tokens", USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
 
-  applyAuthMiddleware(app, {
-    billing: billingSettings,
-  });
+  // applyAuthMiddleware(app, {
+  //   billing: billingSettings,
+  // });
 
   // Do not call app.use(express.json()) before processing webhooks with
   // Shopify.Webhooks.Registry.process().
@@ -109,13 +110,15 @@ export async function createServer(
   });
 
   // All endpoints after this point will require an active session
-  app.use(
-    "/api/*",
-    verifyRequest(app, {
-      billing: billingSettings,
-    })
-  );
-
+  // app.use(
+  //   "/api/*",
+  //   verifyRequest(app, {
+  //     billing: billingSettings,
+  //   })
+  // );
+  app.get("/api",(req,res)=>{
+    return res.send("dd");
+  })
   app.get("/api/products/count", async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(
       req,
@@ -153,7 +156,8 @@ export async function createServer(
   // attribute, as a result of the express.json() middleware
   app.use(express.json());
   
-  app.get("/api/measurements",async(req,res)=>{
+  app.post("/api/store_settings",async(req,res)=>{
+
     const session = await Shopify.Utils.loadCurrentSession(
       req,
       res,
@@ -164,13 +168,49 @@ export async function createServer(
     let data = null;
     try {
       let shop = session?.shop;
-      data = await measurements.find({shop});
+      let unit = req.body.unit;
+      let fontColors = req.body.fontColor;
+      let bgColors = req.body.bgColor;
+    
+      let store_settings_ = await store_settings.update({shop},
+        {unit,fontColors,bgColors}, {upsert: true, setDefaultsOnInsert: true});
+      if(store_settings_){
+        data = store_settings_;
+      }
+      
+    } catch (e) {
+      console.log(`Failed to process products/create: ${e.message}`);
+      status = 500;
+      error = e.message;
+    }
+    res.status(status).send({ success: status === 200, error,data });
+
+  });
+
+  app.get("/api/app_extension",async(req,res)=>{
+    // const session = await Shopify.Utils.loadCurrentSession(
+    //   req,
+    //   res,
+    //   app.get("use-online-tokens")
+    // );
+    let status = 200;
+    let error = "";
+    let data = {};
+    try {
+      // let shop = session?.shop;
+      let shop = req.query.shop;
+      shop = shop +".myshopify.com";
+      console.log("shop",shop);
+      data.measurements = await measurements.find({shop});
+      data.store_settings = await store_settings.findOne({shop});
+      console.log("data",data);
+
     } catch (e) {
       console.log(`Failed to process /measurements: ${e.message}`);
       status = 500;
       error = e.message;
     }
-    res.status(status).send({ success: status === 200, error,data });
+    res.status(status).send({ success: status === 200, error,data:data });
  
   });
 
