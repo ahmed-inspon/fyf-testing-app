@@ -11,7 +11,7 @@ export const ColorModal = ({
 }) => {
   const hexToRgb = (hex) => {
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+    hex = hex?.replace(shorthandRegex, function (m, r, g, b) {
       return r + r + g + g + b + b;
     });
 

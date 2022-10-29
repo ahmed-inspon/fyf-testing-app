@@ -1,6 +1,6 @@
 import { TitleBar } from '@shopify/app-bridge-react';
 import {FormLayout,Toast,Banner, Checkbox,Frame, TextField,Select, Button, Page, Layout, Card} from '@shopify/polaris';
-import {useState, useCallback} from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import { useAppQuery, useAuthenticatedFetch } from "../../hooks";
 import { useParams } from "react-router-dom";
 
@@ -14,7 +14,9 @@ export default () => {
   const [hips, sethips] = useState('');
   const [pant, setpant] = useState('');
   const fetch = useAuthenticatedFetch();
+  const [loading,setloading] = useState(true);
   const [unit,setUnit] = useState("Centimeters");
+  const [measurement,setMeasurement] = useState();
   const { id } = useParams();
   console.log("id",id);
   const options = [
@@ -32,18 +34,37 @@ export default () => {
     {label: '3XL', value: '3xl'},
 
   ];
+  const fetch_measurement = async ()=>{
+    const response = await fetch("/api/measurements/"+id,{method:"GET",
+    headers:{"accept":'application/json',"content-type":"application/json"}});
+    if(response.ok){
+      const resp = await response.json();
+      if(resp.data && resp.data.measurements){
+        setMeasurement(resp.data.measurements);
+        setloading(false);
+      }     
+    }
+    setloading(false);
+  }
+  useEffect(()=>{
+    if(id && id != "create"){
+    fetch_measurement();
+    }
+    else{
+      setloading(false);
+    }
+  },[])
   const [toast, settoast] = useState({active:false,"error":false,"title":""});
 
   const [banner, setbanner] = useState({active:false,"status":"info","title":"","details":""});
-  const [loading,setloading] = useState(false);
   const togglebanner = useCallback(() => setbanner({...banner,active:!banner.active}), []);
   const toggletoast = useCallback(() => settoast({...toast,active:!toast.active}), []);
 
   const handlesubmit = async (measurement,cb) => {
     
-    setloading(true);
+    // setloading(true);
     // console.log("testing started",chest,waist,size);
-    const response = await fetch("/api/measurements/create",{method:"POST",
+    const response = await fetch("/api/measurements/create_update",{method:"POST",
                                 headers:{"accept":'application/json',
                                          "content-type":"application/json"},
                                 body:JSON.stringify(measurement)});
@@ -78,16 +99,19 @@ export default () => {
   return (
     <Frame>
     <Page narrowWidth>
-        <TitleBar title="Find Your Fit - Create Measurement"/>
+      <TitleBar title={`Find Your Fit - ${(!loading && measurement ) ? "Update Measurement" : "Create Measurement"}`}/>
         {banner.active ?
         <Banner title={banner.title} status='critical' onDismiss={() => {togglebanner()}}>
             <p>{banner.details}</p>
         </Banner> : null }
         <Layout>
             <Layout.Section>
+            {!loading ? (    
                 <Card sectioned>
-                   <Form handlesubmit={handlesubmit}/>
+                                
+                  <Form handlesubmit={handlesubmit} measurement={measurement}/>
                 </Card>
+                ):null}
             </Layout.Section>
         </Layout>
         {toastMarkup}

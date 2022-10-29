@@ -18,7 +18,7 @@ import {
   TextField,
   Label,
 } from "@shopify/polaris";
-import {EditMinor} from '@shopify/polaris-icons';
+import {EditMinor,DeleteMinor} from '@shopify/polaris-icons';
 import { TitleBar,useNavigate } from "@shopify/app-bridge-react";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 
@@ -26,6 +26,7 @@ import { trophyImage } from "../assets";
 import { ProductsCard } from "../components";
 import { useEffect, useState,useCallback } from "react";
 import {ColorModal} from "../components";
+import PageHeader from "../components/PageHeader.jsx";
 export default function HomePage() {
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
@@ -36,83 +37,60 @@ export default function HomePage() {
     singular: 'Measurement',
     plural: 'Measurements',
   };
+
+  const delete_measurement = async(id) =>{
+
+    const response = await fetch("/api/measurements/"+id,{method:"DELETE",
+              headers:{"accept":'application/json',"content-type":"application/json"}});
+    if(response.ok){
+      const resp = await response.json();
+      if(resp.data && resp.data.measurements.length){
+        setMeasurements(resp.data.measurements);
+      }     
+    }
+  }
+
   const fetch_measurements = async () =>{
     const response = await fetch("/api/measurements",{method:"GET",
               headers:{"accept":'application/json',"content-type":"application/json"}});
     if(response.ok){
       const resp = await response.json();
-      if(resp.data && resp.data.length){
-        setMeasurements(resp.data);
-      }
-      console.log("measurements",resp);
+      if(resp.data && resp.data.measurements.length){
+        setMeasurements(resp.data.measurements);
+      }     
     }
   }
   useEffect(()=>{
-   
     fetch_measurements();
   },[])
 
-  const [fontColor,setFontColor] = useState('#000000');
-  const [bgColor,setbgColor] = useState('#000000');
-
-  const fontColor_activator = (
-    <div
-      style={{
-        width: "100%",
-        height: "35px",
-        backgroundColor: fontColor,
-        border: "1px solid gray",
-        cursor: "pointer",
-      }}
-      onClick={() => {
-        setFontColorModal(true);
-      }}
-    />
-  );
-
-  const bgColor_activator = (
-    <div
-      style={{
-        width: "100%",
-        height: "35px",
-        backgroundColor: bgColor,
-        border: "1px solid gray",
-        cursor: "pointer",
-      }}
-      onClick={() => {
-        setbgColorModal(true);
-      }}
-    />
-  );
-  const handleUnitChange = useCallback((value) => setUnit(value), []);
-  const [fontColorModal,setFontColorModal] = useState(false);
-  const [bgColorModal,setbgColorModal] = useState(false);
 
   const {selectedResources, allResourcesSelected, handleSelectionChange} =
     useIndexResourceState(measurements,{resourceIDResolver:(row)=>{return row._id}});
-  const rowMarkup = measurements.map(
-    ({_id,neck,hips,pant, size, chest, waist}, index) => (
-      <IndexTable.Row
-        id={_id}
-        key={_id}
-        selected={selectedResources.includes(_id)}
-        position={index}
-      >
-        <IndexTable.Cell>
-          <TextStyle variation="strong">{size}</TextStyle>
-        </IndexTable.Cell>
-        <IndexTable.Cell>{neck}</IndexTable.Cell>
-        <IndexTable.Cell>{chest}</IndexTable.Cell>
-        <IndexTable.Cell>{waist}</IndexTable.Cell>
-        <IndexTable.Cell>{hips}</IndexTable.Cell>
-        <IndexTable.Cell>{pant}</IndexTable.Cell>
-        <IndexTable.Cell><Button onClick={()=>{navigate('measurements/'+_id)}}>
-          <Icon source={EditMinor}></Icon></Button></IndexTable.Cell>
-      </IndexTable.Row>
-    ),
-  );
+  const rowMarkup =  measurements.map(
+      ({_id,title,gender,products}, index) => (
+        <IndexTable.Row
+          id={_id}
+          key={_id}
+          selected={selectedResources.includes(_id)}
+          position={index}
+        >
+          <IndexTable.Cell>
+            <TextStyle variation="strong">{title}</TextStyle>
+          </IndexTable.Cell>
+          <IndexTable.Cell>{gender}</IndexTable.Cell>
+          <IndexTable.Cell>{products.length}</IndexTable.Cell>
+          <IndexTable.Cell><Button onClick={()=>{navigate('/measurements/'+_id)}}>
+            <Icon source={EditMinor}></Icon></Button>
+            <Button onClick={()=>{delete_measurement(_id)}}>
+            <Icon source={DeleteMinor}></Icon></Button></IndexTable.Cell>
+        </IndexTable.Row>
+      ),
+    );
+ 
+  console.log("rowMarkup",rowMarkup,measurements);
   const navigateHandler = () => {
-    navigate('/create');
+    navigate('/measurements/create');
   }
 
   const handleUpdate = async()=>{
@@ -132,8 +110,10 @@ export default function HomePage() {
         }
   }
   return (
-    <Page narrowWidth>
+    <Page>
       <TitleBar title="Find Your Fit - Manage"  primaryAction={{"content":"Create","onAction":navigateHandler}} />
+      <PageHeader/>
+      <br></br>
       <Layout>
         <Layout.Section>
           <Card sectioned>
@@ -144,8 +124,6 @@ export default function HomePage() {
               alignment="center"
             >
               <Stack.Item>
-              {/* <Heading>Manage Measurements</Heading> */}
-
               <IndexTable
                 resourceName={resourceName}
                 itemCount={measurements.length}
@@ -154,12 +132,9 @@ export default function HomePage() {
                 }
                 onSelectionChange={handleSelectionChange}
                 headings={[
-                  {title: 'Size'},
-                  {title: 'Neck'},
-                  {title: 'Chest'},
-                  {title: 'Waist'},
-                  {title: 'Hips'},
-                  {title: 'Pant'},
+                  {title: 'Title'},
+                  {title: 'Gender'},
+                  {title: 'Products'},
                   {title: 'Action'},
                 ]}
               >
@@ -167,43 +142,6 @@ export default function HomePage() {
               </IndexTable>
               </Stack.Item>
             </Stack>
-          </Card>
-        </Layout.Section>
-        <Layout.Section>
-        <Heading>Store Settings</Heading>
-          <Card sectioned>
-            <FormLayout>
-              <Select
-                    label="Measurement Unit"
-                    options={["cm","inches"]}
-                    onChange={handleUnitChange}
-                    value={unit}
-                    helpText={<span>
-                      Default Unit Of Your Store For Measurements
-                      </span>}
-                />
-                <Label>Select Color Of Fonts</Label>
-                <ColorModal 
-                colorPickerModal={fontColorModal}
-                setColorPickerModal={() => setFontColorModal((c) => !c)}
-                activator={fontColor_activator}
-                color={fontColor}
-                onAccept={(color) => {
-                  setFontColor(color);
-                }}
-                />
-                <Label>Select Color Of Background</Label>
-                <ColorModal 
-                colorPickerModal={bgColorModal}
-                setColorPickerModal={() => setbgColorModal((c) => !c)}
-                activator={bgColor_activator}
-                color={bgColor}
-                onAccept={(color) => {
-                  setbgColor(color);
-                }}
-                />
-                <Button onClick={handleUpdate}>Update</Button>
-            </FormLayout>
           </Card>
         </Layout.Section>
       </Layout>

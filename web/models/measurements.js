@@ -1,8 +1,12 @@
+import { DataType } from '@shopify/shopify-api';
 import {mongoose} from 'mongoose';
 
 const schema = new mongoose.Schema({
+    title:String,
     shop: String,
     size: String,
+    sizes:JSON,
+    products:JSON,
     created_at:{
         type:Date,
         default:new Date()},

@@ -1,11 +1,11 @@
 
-<span class="fyf-extension" style="color: {{ block.settings.color }}" data-store-name="{{shop.name}}">
+<span class="fyf-extension" style="color: {{ block.settings.color }}" data-store-name="{{ shop.name }}">
   <!-- Button trigger modal -->
 <div id="best-fit-div">
-  <strong>We recommend you </strong> <span class="best-fit-recommended"></span> <strong>size</strong>
+  <span class="fyf-recommend-title">We recommend you size </span><strong class="best-fit-recommended"></strong>
 </div>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Find Your Fit 
+<button type="button" class="fyf-btn" data-toggle="modal" data-target="#exampleModal">
+  <span class="fyf-btn-title">Find Your Fit 📐</span>
 </button>
 
 <!-- Modal -->
@@ -13,122 +13,124 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content bgColor">
       <div class="modal-header">
-        <h5 class="modal-title fontColor" id="exampleModalLabel">Find Your Fit</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title fontColor fyf-modal-title" id="exampleModalLabel">Find Your Fit</h5>
       </div>
       <div class="modal-body">
         <section class="cart-bar p-4 fontColor" id="cart-page-1">
-          <p>Want to buy, but you are confused about your size?</p>
-          <p>We can help you find your fit for this store.</p>
-          <p>Select your gender</p>
-
-          <div class="btn-sec d-flex justify-content-around mt-5">
-              <button class="btn btn-primary btn-rounded step-1 fontColor" data-gender="m">Men</button>
-              <button class="btn btn-primary btn-rounded step-1 fontColor" data-gender="f">Women</button>
-          </div>
-      </section>
-
-      <section class="cart-bar p-4" id="cart-page-2" style="display: none;">
-          <p class="fontColor">Fill these measurements so that we can find best fit for you</p>
-          <div class="d-flex align-items-center"><span><small>Unit:</small></span> <span>
-            <!-- Material input -->
-              <input type="radio" name="unit" checked value="cm"><small class="fontColor">Centimeter</small>
-              <input type="radio" name="unit" value="in"><small class="fontColor">Inches</small>
-          </span>
-          </div>
-
-          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Neck:</small></span> <span>
-                  <!-- Material input -->
-                  <div class="md-form d-inline">
-                      <input type="number" id="neck" name="neck" class="form-control" autocomplete="off">
-                  </div>
-                  <h6 id="valid_neck"></h6>
-              </span>
-          </div>
-
-          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Chest:</small></span> <span>
-                  <!-- Material input -->
-                  <div class="md-form d-inline">
-                      <input type="number" id="chest" name="chest" class="form-control" autocomplete="off">
-                  </div>
-                  <h6 id="valid_chest"></h6>
-              </span>
-          </div>
-
-          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Waist:</small></span> <span>
-                  <!-- Material input -->
-                  <div class="md-form d-inline">
-                      <input type="number" id="waist" name="waist" class="form-control" autocomplete="off">
-                  </div>
-                  <h6 id="valid_waist"></h6>
-              </span>
-          </div>
-
-          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Hip:</small></span> <span>
-                  <!-- Material input -->
-                  <div class="md-form d-inline">
-                      <input type="number" id="hips" name="hips" class="form-control" autocomplete="off">
-                  </div>
-                  <h6 id="valid_hips"></h6>
-              </span>
-          </div>
-
-          <div class="d-flex align-items-center"><span><small class="fontColor">Enter Your Pant Length:</small></span> <span>
-                  <!-- Material input -->
-                  <div class="md-form d-inline">
-                      <input type="number" id="pant" name="pant" class="form-control" autocomplete="off">
-                  </div>
-                  <h6 id="valid_height"></h6>
-              </span>
-          </div>
-
-
-          <div class="img-sec text-center mt-3">
-              <img class="img-fluid" src="" alt="">
-          </div>
+          <p class="fyf-modal-desc">Want to buy, but you are confused about your size?
+            We can help you find your fit for this store.
+          </p>
+          {% render "modal-snippet" %}
           <div class="btn-sec d-flex justify-content-center mt-5">
-              <button id="step-2" class="btn btn-primary btn-rounded">Next</button>
+            <button id="step-1" class="btn btn-primary btn-rounded fyf-next-btn-title">Next</button>
+          </div>
+        </Section>
+        <Section class="cart-bar p-4 fontColor" id="cart-page-2">
+          <p class="fontColor fyf-modal-desc2">Fill these measurements so that we can find best fit for you</p>
+          <div class="d-flex align-items-center form-field">
+            <label>Gender:</label> <span>
+              <input type="radio" name="gender" checked value="m"><label class="fontColor option">Men</label>
+              <input type="radio" name="gender" value="f"><label class="fontColor option">Women</label>
+            </span>
           </div>
 
-      </section>
+          <div class="d-flex align-items-center form-field">
+            <label>Unit:</label>
+            <span>
+                <input type="radio" name="unit" checked value="cm"><label class="fontColor option">Centimeter</label>
+                <input type="radio" name="unit" value="in"><label class="fontColor option">Inches</label>
+            </span>
+          </div>
+
+          <div class="d-flex align-items-center form-field">
+            <label class="fontColor">Enter Your Neck:</label>
+            <span>
+                <div class="md-form d-inline">
+                    <input type="number" id="neck" name="neck" class="form-control" autocomplete="off">
+                </div>
+            </span>
+          </div>
+
+          <div class="d-flex align-items-center form-field">
+            <label class="fontColor">Enter Your Chest:</label>
+            <span>
+                <div class="md-form d-inline">
+                    <input type="number" id="chest" name="chest" class="form-control" autocomplete="off">
+                </div>
+            </span>
+          </div>
+
+          <div class="d-flex align-items-center form-field">
+            <label class="fontColor">Enter Your Waist:</label>
+            <span>
+              <div class="md-form d-inline">
+                  <input type="number" id="waist" name="waist" class="form-control" autocomplete="off">
+              </div>
+            </span>
+          </div>
+
+          <div class="d-flex align-items-center form-field">
+            <label class="fontColor">Enter Your Hip:</label> 
+            <span>
+              <div class="md-form d-inline">
+                  <input type="number" id="hips" name="hips" class="form-control" autocomplete="off">
+              </div>
+            </span>
+          </div>
+
+          <div class="d-flex align-items-center form-field">
+            <label class="fontColor">Enter Your Pant Length:</label>
+            <span>
+              <div class="md-form d-inline">
+                  <input type="number" id="pant" name="pant" class="form-control" autocomplete="off">
+              </div>
+            </span>
+          </div>
+
+          <div class="btn-sec d-flex justify-content-center mt-5">
+              <button id="step-1-back" class="btn btn-primary btn-rounded fyf-back-btn-title">Back</button>
+              <button id="step-2" class="btn btn-primary btn-rounded fyf-next-btn-title">Next</button>
+          </div>
+
+
+        </section>
 
       <section class="cart-bar" id="cart-page-3" style="display: none;">
           <div class="text-center cart-thank-sec">
-              <h2 class="text-uppercase fontColor">Our Recommendation</h2>
+              <h2 class="text-uppercase fontColor fyf-our-recommendation-title">Our Recommendation</h2>
               <strong class="fontColor">We recommend you </strong> <span class="best-fit-recommended"></span> <strong>size</strong>
               <br>
-              <i class="fontColor">This size is recommended by matching your body measurement with stores defined measurement of their clothing</i>
-
+              <i class="fontColor fyf-our-recommendation-desc">This size is recommended by matching your body measurement with stores defined measurement of their clothing</i>
+              {% render "modal-snippet" %}
           </div>
 
-          <div class="img-sec text-center mt-3">
-              <img class="img-fluid" src="" alt="">
-          </div>
           <div class="btn-sec d-flex justify-content-around mt-5">
-              <button class="btn btn-primary btn-rounded px-4 step-3 fontColor"><i class="fas fa-redo mr-2"></i> Start
-                  Again</button>
+              <button class="btn btn-primary btn-rounded px-4 step-3 fontColor"><i class="fas fa-redo mr-2"></i> <span class="fyf-start-btn-title">Start
+                  Again</span></button>
           </div>
       </section>
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary fontColor" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary fontColor">Save changes</button>
+        <button type="button" class="btn btn-secondary fontColor fyf-close-btn-title" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 </span>
 {% schema %}
-  {
-    "name": "Fyf-Block",
-    "target": "section",
-    "stylesheet": "app.css",
-    "javascript": "app-block.js",
-    "settings": [
-        { "label": "Color", "id": "color", "type": "color", "default": "#000000" }
-    ]
-  }
+{
+  "name": "Fyf-Block",
+  "target": "section",
+  "stylesheet": "app.css",
+  "javascript": "app-block.js",
+  "settings": [
+    {
+      "label": "Color",
+      "id": "color",
+      "type": "color",
+      "default": "#000000"
+    }
+  ]
+}
 {% endschema %}
