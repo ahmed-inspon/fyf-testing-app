@@ -19,7 +19,7 @@ import store_settings from "./models/store_settings.js";
 import dotenv from 'dotenv';
 dotenv.config();
 const USE_ONLINE_TOKENS = false;
-
+console.log("SHOPIFY_API_KEY",process.env.SHOPIFY_API_KEY);
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
 // TODO: There should be provided by env vars
