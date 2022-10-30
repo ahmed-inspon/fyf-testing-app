@@ -24,7 +24,7 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
 // TODO: There should be provided by env vars
 const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
-const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
+const PROD_INDEX_PATH = `${process.cwd()}/web/frontend/dist/`;
 main().catch(err => console.log(err));
 async function main() {
   await Mongoose.connect('mongodb+srv://sell-quicky-admin:SUYJGBqfQ5tOGFvj@cluster0.po1dbmb.mongodb.net/fyf');
