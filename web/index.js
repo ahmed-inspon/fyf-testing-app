@@ -1,10 +1,12 @@
 // @ts-check
 //
-//   https://55e5-182-189-247-70.eu.ngrok.io?shop=fyf-testing.myshopify.com&host=ZnlmLXRlc3RpbmcubXlzaG9waWZ5LmNvbS9hZG1pbg       
+//       https://642e-182-189-243-230.eu.ngrok.io?shop=fyf-testing.myshopify.com&host=ZnlmLXRlc3RpbmcubXlzaG9waWZ5LmNvbS9hZG1pbg
 import { join } from "path";
 import { readFileSync } from "fs";
 import express, { response } from "express";
 import cookieParser from "cookie-parser";
+import axios from "axios";
+import fetch from 'node-fetch';
 import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
 import Mongoose from 'mongoose';
 import applyAuthMiddleware from "./middleware/auth.js";
@@ -39,7 +41,7 @@ const sessionDb = new Shopify.Session.MongoDBSessionStorage(new URL("mongodb+srv
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
-  SCOPES: process.env.SCOPES.split(","),
+  SCOPES: ["read_products","read_themes"],
   HOST_NAME: process.env.HOST.replace(/https?:\/\//, ""),
   HOST_SCHEME: process.env.HOST.split("://")[0],
   API_VERSION: LATEST_API_VERSION,
@@ -124,6 +126,25 @@ export async function createServer(
   app.get("/api", (req, res) => {
     return res.send("dd");
   })
+
+  app.get("/api/get_themes",async(req,res)=>{
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+    // try {
+      const response = await axios.get(
+        `https://${process.env.SHOPIFY_API_KEY}:${session.accessToken}@${session.shop}/admin/api/2021-04/themes.json?`
+      );
+      const data = response.data;
+      console.log("thmedata",data)
+      return res.status(200).json({ success: true, data });
+    // } catch (err) {
+    //   console.log(err);
+    //   return res.status(400).json({ success: false,err, message: "error in getting theme ids" });
+    // }
+  });
   app.get("/api/products/count", async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(
       req,

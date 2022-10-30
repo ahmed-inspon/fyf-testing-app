@@ -5,6 +5,7 @@ import {
   TextContainer,
   Image,
   Stack,
+  Modal,
   Select,
   Link,
   Heading,
@@ -21,12 +22,15 @@ import {
 import {EditMinor,DeleteMinor} from '@shopify/polaris-icons';
 import { TitleBar,useNavigate } from "@shopify/app-bridge-react";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
+import { useAppBridge } from "@shopify/app-bridge-react";
+import { Redirect } from "@shopify/app-bridge/actions";
 
 import { trophyImage } from "../assets";
 import { ProductsCard } from "../components";
 import { useEffect, useState,useCallback } from "react";
 import {ColorModal} from "../components";
 import PageHeader from "../components/PageHeader.jsx";
+import ConnectThemeModal from '../components/ConnectThemeModal.jsx'
 export default function HomePage() {
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
@@ -37,18 +41,46 @@ export default function HomePage() {
     singular: 'Measurement',
     plural: 'Measurements',
   };
-
-  const delete_measurement = async(id) =>{
-
-    const response = await fetch("/api/measurements/"+id,{method:"DELETE",
-              headers:{"accept":'application/json',"content-type":"application/json"}});
-    if(response.ok){
-      const resp = await response.json();
-      if(resp.data && resp.data.measurements.length){
-        setMeasurements(resp.data.measurements);
-      }     
+  const [active, setActive] = useState(false);
+  const handleChange = useCallback(() => setActive(!active), [active]);
+  const [deleteid,setdeleteid] = useState(null);
+  const [deletionLoader,setdeletionloader] = useState(false);
+  const delete_measurement_confirm = (id) => {
+    if(id){
+      setdeleteid(id);
+      handleChange();
     }
+    
   }
+  // function delete_measurement(){
+  //   if(deleteid){
+  //     alert(deleteid);
+  //   }
+  // }
+  /**
+   * Creating App Birdge instance
+   */
+  const app = useAppBridge();
+  const redirect = Redirect.create(app);
+  const [connectThemeModal, toggleConnectThemeModal] = useState(false);
+
+
+  const delete_measurement = useCallback(async()=>{
+    if(deleteid){
+      setdeletionloader(true);
+      const response = await fetch("/api/measurements/"+deleteid,{method:"DELETE",
+              headers:{"accept":'application/json',"content-type":"application/json"}});
+      if(response.ok){
+        const resp = await response.json();
+        if(resp.data && resp.data.measurements.length){
+          setMeasurements(resp.data.measurements);
+        }     
+      }
+      setdeletionloader(false);
+      handleChange();
+      
+    }
+  },[deleteid]) 
 
   const fetch_measurements = async () =>{
     const response = await fetch("/api/measurements",{method:"GET",
@@ -82,13 +114,15 @@ export default function HomePage() {
           <IndexTable.Cell>{products.length}</IndexTable.Cell>
           <IndexTable.Cell><Button onClick={()=>{navigate('/measurements/'+_id)}}>
             <Icon source={EditMinor}></Icon></Button>
-            <Button onClick={()=>{delete_measurement(_id)}}>
-            <Icon source={DeleteMinor}></Icon></Button></IndexTable.Cell>
+            <span style={{marginLeft:12}}>
+            <Button onClick={()=>{delete_measurement_confirm(_id)}} >
+            <Icon source={DeleteMinor}></Icon></Button>
+            </span>
+           </IndexTable.Cell>
         </IndexTable.Row>
       ),
     );
  
-  console.log("rowMarkup",rowMarkup,measurements);
   const navigateHandler = () => {
     navigate('/measurements/create');
   }
@@ -112,7 +146,7 @@ export default function HomePage() {
   return (
     <Page>
       <TitleBar title="Find Your Fit - Manage"  primaryAction={{"content":"Create","onAction":navigateHandler}} />
-      <PageHeader/>
+      <PageHeader connectTheme={toggleConnectThemeModal}/>
       <br></br>
       <Layout>
         <Layout.Section>
@@ -145,6 +179,41 @@ export default function HomePage() {
           </Card>
         </Layout.Section>
       </Layout>
+      <Modal
+        title={"Delete Sizing Chart?"}
+        open={active}
+        onClose={handleChange}
+        primaryAction={{
+          loading:deletionLoader,
+          destructive:true,
+          content: 'Confirm',
+          onAction: delete_measurement,
+        }}
+        secondaryActions={[
+          {
+            content: 'Cancel',
+            onAction: handleChange
+          }
+        ]}
+      >
+        <Modal.Section>
+          <TextContainer>
+            <p>
+              You are about to delete sizing chart, this action is irreversable, all the products showing this sizing chart will not be able to show chart.
+            </p>
+          </TextContainer>
+        </Modal.Section>
+      </Modal>
+      <ConnectThemeModal
+              store={"store"}
+              redirect={redirect}
+              enableStore={() => {
+                // setStoreData({ ...store, theme_block_enabled: true });
+              }}
+              visible = {connectThemeModal}
+              // visible={storeData.theme_block_enabled === false ? true : connectThemeModal}
+              onClose={() => toggleConnectThemeModal(false)}
+      />
     </Page>
   );
 }
