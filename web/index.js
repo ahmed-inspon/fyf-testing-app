@@ -1,6 +1,6 @@
 // @ts-check
 //
-//  https://6a6a-182-189-234-80.eu.ngrok.io?shop=fyf-testing.myshopify.com&host=ZnlmLXRlc3RpbmcubXlzaG9waWZ5LmNvbS9hZG1pbg
+//    https://3131-182-189-234-80.eu.ngrok.io?shop=fyf-testing.myshopify.com&host=ZnlmLXRlc3RpbmcubXlzaG9waWZ5LmNvbS9hZG1pbg
 import { join } from "path";
 import { readFileSync } from "fs";
 import express, { response } from "express";
@@ -18,6 +18,7 @@ import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 import measurements from "./models/measurements.js";
 import store_settings from "./models/store_settings.js";
+import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 const USE_ONLINE_TOKENS = false;
@@ -62,6 +63,7 @@ Shopify.Context.initialize({
 Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
   path: "/api/webhooks",
   webhookHandler: async (_topic, shop, _body) => {
+    console.log("deleting store");
     await AppInstallations.delete(shop);
   },
 });
@@ -93,7 +95,7 @@ export async function createServer(
   billingSettings = BILLING_SETTINGS
 ) {
   const app = express();
-
+  app.use(cors());
   app.set("use-online-tokens", USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
 

@@ -4,7 +4,7 @@
     // product_container.append(h2);
 
     if(!window.fyf_app_extension){
-        const base_url = "https://6174-182-189-247-70.eu.ngrok.io/";
+        const base_url = "https://3131-182-189-234-80.eu.ngrok.io/";
     const store_name = document.querySelector(".fyf-extension").getAttribute("data-store-name");
     let gender_setup = "";
     let measurements = [];
