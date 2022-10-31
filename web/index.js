@@ -118,7 +118,34 @@ export async function createServer(
       }
     }
   });
+ //app extenion end points
+ app.get("/api/app_extension", async (req, res) => {
+  // const session = await Shopify.Utils.loadCurrentSession(
+  //   req,
+  //   res,
+  //   app.get("use-online-tokens")
+  // );
+  let status = 200;
+  let error = "";
+  let data = {};
+  try {
+    // let shop = session?.shop;
+    let shop = req.query.shop;
+    shop = shop + ".myshopify.com";
+    // console.log("shop", shop);
+    data.measurements = await measurements.find({ shop });
+    data.store_settings = await store_settings.findOne({ shop });
+    // console.log("data", data);
 
+  } catch (e) {
+    console.log(`Failed to process /measurements: ${e.message}`);
+    status = 500;
+    error = e.message;
+  }
+  res.status(status).send({ success: status === 200, error, data: data });
+
+});
+ //app entension end points
   // All endpoints after this point will require an active session
   app.use(
     "/api/*",
@@ -361,33 +388,6 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
       error = e.message;
     }
     res.status(status).send({ success: status === 200, error, data });
-
-  });
-
-  app.get("/api/app_extension", async (req, res) => {
-    // const session = await Shopify.Utils.loadCurrentSession(
-    //   req,
-    //   res,
-    //   app.get("use-online-tokens")
-    // );
-    let status = 200;
-    let error = "";
-    let data = {};
-    try {
-      // let shop = session?.shop;
-      let shop = req.query.shop;
-      shop = shop + ".myshopify.com";
-      // console.log("shop", shop);
-      data.measurements = await measurements.find({ shop });
-      data.store_settings = await store_settings.findOne({ shop });
-      // console.log("data", data);
-
-    } catch (e) {
-      console.log(`Failed to process /measurements: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-    res.status(status).send({ success: status === 200, error, data: data });
 
   });
 
