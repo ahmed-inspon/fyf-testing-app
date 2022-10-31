@@ -61,6 +61,8 @@ export default function HomePage() {
    * Creating App Birdge instance
    */
   const app = useAppBridge();
+  const store_url = app.hostOrigin.replace("https://","");
+  console.log("app------------->",app);
   const redirect = Redirect.create(app);
   const [connectThemeModal, toggleConnectThemeModal] = useState(false);
 
@@ -205,7 +207,7 @@ export default function HomePage() {
         </Modal.Section>
       </Modal>
       <ConnectThemeModal
-              store={"store"}
+              store={store_url}
               redirect={redirect}
               enableStore={() => {
                 // setStoreData({ ...store, theme_block_enabled: true });

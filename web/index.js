@@ -1,6 +1,6 @@
 // @ts-check
 //
-//       https://642e-182-189-243-230.eu.ngrok.io?shop=fyf-testing.myshopify.com&host=ZnlmLXRlc3RpbmcubXlzaG9waWZ5LmNvbS9hZG1pbg
+//  https://6a6a-182-189-234-80.eu.ngrok.io?shop=fyf-testing.myshopify.com&host=ZnlmLXRlc3RpbmcubXlzaG9waWZ5LmNvbS9hZG1pbg
 import { join } from "path";
 import { readFileSync } from "fs";
 import express, { response } from "express";
@@ -69,12 +69,13 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
 // See the ensureBilling helper to learn more about billing in this template.
 const BILLING_SETTINGS = {
-  required: false,
+  required: true,
   // This is an example configuration that would do a one-time charge for $5 (only USD is currently supported)
-  // chargeName: "My Shopify One-Time Charge",
-  // amount: 5.0,
-  // currencyCode: "USD",
-  // interval: BillingInterval.OneTime,
+  chargeName: "Base Plan",
+  amount: 2.9,
+  currencyCode: "USD",
+  trial:3,
+  interval: BillingInterval.Every30Days,
 };
 
 // This sets up the mandatory GDPR webhooks. You’ll need to fill in the endpoint
@@ -117,15 +118,140 @@ export async function createServer(
   });
 
   // All endpoints after this point will require an active session
-  // app.use(
-  //   "/api/*",
-  //   verifyRequest(app, {
-  //     billing: billingSettings,
-  //   })
-  // );
-  app.get("/api", (req, res) => {
-    return res.send("dd");
-  })
+  app.use(
+    "/api/*",
+    verifyRequest(app, {
+      billing: billingSettings,
+    })
+  );
+  // app.get("/api", (req, res) => {
+  //   return res.send("dd");
+  // })
+
+  app.get('/api/os_check' ,async (req,res) => {
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+    let {shop,accessToken} = session;
+    let theme_id = req.query.theme_id;
+    if(!theme_id || theme_id == "" )
+    {
+        return res.status(400).json({success:false,"message":"theme_id is required in body"}); 
+    }
+    let theme = null;
+    let data = null;
+    let success = false;
+    let matchesFiles = [];
+        
+    theme = await axios.get('https://'+process.env.SHOPIFY_API_KEY+':'+accessToken+
+    '@'+shop + '/admin/api/2020-01/themes/'+theme_id+'/assets.json');
+    if(theme.data)
+    {
+        theme = theme.data;
+        const files_to_look = [
+            "templates/product.json",
+            "templates/collection.json",
+            "templates/index.json",
+        ];
+        for (
+        let index = 0;
+        index < theme.assets.length;
+        index++
+        ) {
+            const asset = theme.assets[index];
+            if (files_to_look.indexOf(asset.key) !== -1) {
+                let single_file_data = await axios.get('https://'+process.env.SHOPIFY_API_KEY
+                +':'+accessToken +
+                '@'+shop + '/admin/api/2021-04/themes/'+theme_id+'/assets.json?asset[key]='+asset.key);
+                if(single_file_data.data){
+                    single_file_data = single_file_data.data;
+                }
+              
+                const file_data = JSON.parse(single_file_data.asset.value);
+                const get_main_type = file_data?.sections?.main?.type;
+
+                if (get_main_type) {
+                    let get_section_file = await axios.get('https://'+process.env.SHOPIFY_API_KEY
+                    +':'+accessToken +
+                    '@'+shop + '/admin/api/2021-04/themes/'+theme_id+'/assets.json?asset[key]='+"sections/" + get_main_type + ".liquid");
+                    if(get_section_file.data){
+                        get_section_file =  get_section_file.data;
+                    }
+                
+                const section_file_data = get_section_file.asset.value;
+
+                const match_schema = section_file_data.match(new RegExp('\\{\\%\\s+schema\\s+\\%\\}([\\s\\S]*?)\{\\%\\s+endschema\\s+\\%\\}', 'm'));
+            
+                if(match_schema){
+                    const section_schema = JSON.parse(match_schema[0].replace("{% schema %}", "").replace("{% endschema %}", ""));
+                    section_schema.blocks.forEach(block => {
+                    if(block.type === "@app"){
+                        matchesFiles.push(asset.key);
+                    }
+                    })
+                }
+                // console.log(section_file_data);
+                }
+            }
+        }
+
+    }
+    else{
+        console.log("theme",theme);
+    }
+    if(matchesFiles.length){
+        success = true;
+    }
+    return res.status(success == true ? 200 : 400).json({success,data:matchesFiles});
+
+});
+
+app.get('/api/check_block_in_theme' ,async (req,res) => {
+
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+    let {shop,accessToken} = session;
+    let theme_id = req.query.theme_id;
+    if(!theme_id || theme_id == "" )
+    {
+        return res.status(400).json({success:false,"message":"theme_id is required in body"}); 
+    }
+    try{
+        let get_settings_data = await axios.get('https://'+process.env.SHOPIFY_API_KEY+':'+ accessToken+
+        '@'+shop + '/admin/api/2021-04/themes/'+theme_id+'/assets.json?asset[key]=config/settings_data.json');
+        if(get_settings_data.data){
+            get_settings_data = get_settings_data.data;
+        }
+        // const get_settings_data = await assets_api.get_single_asset(shop, storeData.accessToken, theme_id, 'config/settings_data.json');
+        // const settings_data = JSON.parse(get_settings_data.snippet.asset.value);
+        const settings_data = JSON.parse(get_settings_data.asset.value);
+        console.log("settings_data",settings_data);
+
+        let if_block = false;
+        if(settings_data?.current?.blocks){
+            const blocks = Object.keys(settings_data.current.blocks);
+    
+            blocks.forEach(block => {
+            const current_block = settings_data.current.blocks[block];
+            console.log("block",current_block.type); // use this line to find available block
+            if(current_block.type === 'shopify://apps/find-your-fit-test/blocks/app-embed/ab92ea17-5dbb-4f16-ac05-0ddb0b48990e'){
+                if(current_block.disabled === false){
+                if_block = true;
+                }
+            }
+            });
+        }
+        return res.status(200).json({success:true,is_block:if_block});
+    }
+    catch(err){
+        return res.status(400).json({success:false,err});
+    }
+});
 
   app.get("/api/get_themes",async(req,res)=>{
     const session = await Shopify.Utils.loadCurrentSession(

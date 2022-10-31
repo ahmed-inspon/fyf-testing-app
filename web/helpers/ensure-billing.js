@@ -22,7 +22,7 @@ let isProd;
  */
 export default async function ensureBilling(
   session,
-  { chargeName, amount, currencyCode, interval },
+  { chargeName, amount, currencyCode, interval,trial },
   isProdOverride = process.env.NODE_ENV === "production"
 ) {
   if (!Object.values(BillingInterval).includes(interval)) {
@@ -39,6 +39,7 @@ export default async function ensureBilling(
   } else {
     hasPayment = false;
     confirmationUrl = await requestPayment(session, {
+      trial,
       chargeName,
       amount,
       currencyCode,
@@ -100,7 +101,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
 
 async function requestPayment(
   session,
-  { chargeName, amount, currencyCode, interval }
+  {chargeName, amount, currencyCode, interval,trial }
 ) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
   const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${
@@ -114,8 +115,10 @@ async function requestPayment(
       amount,
       currencyCode,
       interval,
+      trial
     });
     data = mutationResponse.body.data.appSubscriptionCreate;
+    console.log("mutationResponse.body.data",mutationResponse.body.data);
   } else {
     const mutationResponse = await requestSinglePayment(client, returnUrl, {
       chargeName,
@@ -138,7 +141,7 @@ async function requestPayment(
 async function requestRecurringPayment(
   client,
   returnUrl,
-  { chargeName, amount, currencyCode, interval }
+  {trial, chargeName, amount, currencyCode, interval }
 ) {
   const mutationResponse = await client.query({
     data: {
@@ -157,6 +160,7 @@ async function requestRecurringPayment(
         ],
         returnUrl,
         test: !isProd,
+        trialDays: trial
       },
     },
   });
@@ -244,12 +248,14 @@ const RECURRING_PURCHASE_MUTATION = `
     $lineItems: [AppSubscriptionLineItemInput!]!
     $returnUrl: URL!
     $test: Boolean
+    $trialDays: Int
   ) {
     appSubscriptionCreate(
       name: $name
       lineItems: $lineItems
       returnUrl: $returnUrl
       test: $test
+      trialDays: $trialDays
     ) {
       confirmationUrl
       userErrors {

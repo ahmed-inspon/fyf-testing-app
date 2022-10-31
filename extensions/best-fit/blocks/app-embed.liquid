@@ -1,5 +1,5 @@
 <span>
-hello embed -app
+hello embed -app {{block.settings.heading_font}}
 </span>
 {% schema %}
 {
@@ -9,8 +9,20 @@ hello embed -app
   "javascript": "app-block.js",
   "settings": [
     {
-      "label": "Color",
+      "label": "Color 2",
       "id": "color",
+      "type": "color",
+      "default": "#000000"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "helvetica_n4"
+    },
+    {
+      "label": "Background Color",
+      "id": "backgroundColor",
       "type": "color",
       "default": "#000000"
     }

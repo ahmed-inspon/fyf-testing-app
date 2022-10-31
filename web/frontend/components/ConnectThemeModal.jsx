@@ -34,6 +34,7 @@ import {
     /**
      * API calls
      */
+    const [enableThemeLoading,setenableThemeLoading] = useState(true);
     // const [enableThemeApi, enableThemeLoading] = useAPI(Mutations.enableThemeBlock);
     // const [getAllTheme, getAllThemeLoading] = useAPI(Mutations.getAllThemes);
     // const [checkThemeBlockApi] = useAPI(Mutations.checkThemeBlock);
@@ -43,30 +44,39 @@ import {
      * Check theme OS version
      */
     const checkOS = async ({ shop, theme_id }) => {
-    //   try {
-    //     const { data } = await checkOSApi({ shop, theme_id });
-    //     setThemeOS(data);
-    //   } catch (err) {
-    //     console.log(errorHandler(err));
-    //   }
+      try {
+        const resp = await fetch('/api/os_check?theme_id='+theme_id);
+        if(resp.ok){
+            let respjson = resp.json();
+            console.log("respjson",respjson);
+        }
+        // setThemeOS(data);
+      } catch (err) {
+        console.log(errorHandler(err));
+      }
     };
   
     /**
      * Check if theme block is connected or not
      */
     const checkThemeBlock = async ({ shop, theme_id }) => {
-    //   try {
-    //     const { data } = await checkThemeBlockApi({ shop, theme_id });
-    //     setThemeData(data);
-    //     if (data.is_block) {
-    //       stopInterval();
-    //       checkOS({ shop, theme_id });
-    //     } else {
-    //       toggleThemeLoading(false);
-    //     }
-    //   } catch (err) {
-    //     console.log(errorHandler(err));
-    //   }
+      try {
+        const resp = await fetch('/api/check_block_in_theme?theme_id='+theme_id);
+        if(resp.ok){
+            let respjson = await resp.json();
+             setThemeData({is_block:respjson.is_block});
+            if (respjson.is_block) {
+              stopInterval();
+              checkOS({ shop, theme_id });
+            } else {
+              toggleThemeLoading(false);
+            }
+            console.log("respjson2",respjson);
+        }
+       
+      } catch (err) {
+        console.log(errorHandler(err));
+      }
     };
   
     const enablaTheme = async () => {
@@ -115,9 +125,10 @@ import {
   
     const startInterval = (theme_id) => {
       toggleThemeLoading(true);
+      checkThemeBlock({ shop: store, theme_id });
       intervalRef.current = setInterval(() => {
         checkThemeBlock({ shop: store, theme_id });
-      }, 1000);
+      }, 10000);
     };
   
     const stopInterval = () => {
@@ -132,7 +143,7 @@ import {
     return (
       <Modal open={visible} onClose={closeModal} titleHidden={true}>
         <StyledContent>
-          <Heading>Connect Dropify with theme storefront</Heading>
+          <Heading>Connect Find Your Fit with theme storefront</Heading>
           <br />
           {false ? (
             <div style={{ padding: "48px 0" }}>
@@ -140,7 +151,7 @@ import {
             </div>
           ) : (
             <>
-              <p style={{ marginBottom: 12 }}>Which theme you want to connect with Dropify?</p>
+              <p style={{ marginBottom: 12 }}>Which theme you want to connect with Find Your Fit?</p>
               <Select
                 label=""
                 options={options}
@@ -204,7 +215,7 @@ import {
                   style={{ width: "80%" }}
                   onClick={() => {
                     redirect.dispatch(Redirect.Action.REMOTE, {
-                      url: `https://${store}/admin/themes/${value}/editor?context=apps&template=product&activateAppId=76d59ff4-84f6-4fb8-84cb-ba018ca98d89/app-embed`,
+                      url: `https://${store}/admin/themes/${value}/editor?context=apps&template=product&activateAppId=ab92ea17-5dbb-4f16-ac05-0ddb0b48990e/app-embed`,
                       newContext: true,
                     });
                   }}
