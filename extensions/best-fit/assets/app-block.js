@@ -100,7 +100,7 @@ if (!window.fyf_app_extension) {
         console.log("measuremnet", measurements);
         if (measurements) {
           let best_fit = localStorage.getItem(
-            "fyf-best-fit-" + measurements.id
+            "fyf-best-fit-" + measurements._id
           );
           if (best_fit) {
             render_suggested_size(best_fit);
@@ -389,7 +389,7 @@ if (!window.fyf_app_extension) {
       let suggested_size = mode_;
       console.log("suggested", suggested_size);
       if (suggested_size) {
-        localStorage.setItem("fyf-best-fit-" + measurements.id, suggested_size);
+        localStorage.setItem("fyf-best-fit-" + measurements._id, suggested_size);
         render_suggested_size(suggested_size);
         show_result_modal();
       }

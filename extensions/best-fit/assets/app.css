@@ -261,6 +261,7 @@ hr {
 }
 
 #best-fit-div {
+    color: rgb(var(--color-foreground));
     display: none;
     text-align: center;
 }
@@ -296,8 +297,13 @@ hr {
     border-radius: 50%;
     padding:0.2rem 0.5rem;
     border: 1px solid;
-    border-color: #000;
+    border-color: rgb(var(--color-foreground));
 }
+.fyf-extension .modal .best-fit-recommended{
+    padding: 0rem 0.6rem;
+    font-weight: bold;
+}
+
 .fyf-extension button {
     border: 1px solid #999;
     border-radius: 2px;
