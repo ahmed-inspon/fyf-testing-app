@@ -43,24 +43,13 @@ export function AppBridgeProvider({ children }) {
 
     return {
       host,
-      apiKey: process.env.SHOPIFY_API_KEY,
+      apiKey: process.env.SHOPIFY_API_KEY || "acc3aa48fd49f34c2a9c0001ee80eb97",
       forceRedirect: true,
     };
   });
 
-  if (!process.env.SHOPIFY_API_KEY || !appBridgeConfig.host) {
-    const bannerProps = !process.env.SHOPIFY_API_KEY
-      ? {
-          title: "Missing Shopify API Key",
-          children: (
-            <>
-              Your app is running without the SHOPIFY_API_KEY environment
-              variable. Please ensure that it is set when running or building
-              your React app.
-            </>
-          ),
-        }
-      : {
+  if (!appBridgeConfig.host) {
+    const bannerProps ={
           title: "Missing host query argument",
           children: (
             <>
