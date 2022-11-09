@@ -153,7 +153,7 @@ if (!window.fyf_app_extension) {
           table_head += "</tr>";
 
           measurements.sizes.forEach((s) => {
-            table_body += `<tr><th>${s.label}</th>`;
+            table_body += `<tr><td data-th="Size"><strong>${s.label}</strong></td>`;
             if (graphs.includes("neck")) {
               table_body += `<td data-th="Neck">${s.neck}</td>`;
             }

@@ -1,3 +1,27 @@
+#fyf-modal .modal-content::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    background-color: #F5F5F5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+}
+
+#fyf-modal .modal-content::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5;
+}
+
+#fyf-modal .modal-content::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #53565a;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+}
 .fyf-extension .modal-open {
     overflow: hidden
 }
@@ -173,6 +197,7 @@
 
 #best-fit-div {
     display: none;
+    text-align: center;
 }
 
 .fyf-extension {
