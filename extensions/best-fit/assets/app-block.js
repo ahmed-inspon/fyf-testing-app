@@ -155,25 +155,25 @@ if (!window.fyf_app_extension) {
           measurements.sizes.forEach((s) => {
             table_body += `<tr><th>${s.label}</th>`;
             if (graphs.includes("neck")) {
-              table_body += `<td>${s.neck}</td>`;
+              table_body += `<td data-th="Neck">${s.neck}</td>`;
             }
             if (graphs.includes("chest")) {
-              table_body += `<td>${s.chest}</td>`;
+              table_body += `<td data-th="Chest">${s.chest}</td>`;
             }
             if (graphs.includes("sleeves")) {
-              table_body += `<td>${s.sleeves}</td>`;
+              table_body += `<td data-th="Sleeves">${s.sleeves}</td>`;
             }
             if (graphs.includes("shirt_length")) {
-              table_body += `<td>${s.shirt_length}</td>`;
+              table_body += `<td data-th="Shirt Length">${s.shirt_length}</td>`;
             }
             if (graphs.includes("waist")) {
-              table_body += `<td>${s.waist}</td>`;
+              table_body += `<td data-th="Waist">${s.waist}</td>`;
             }
             if (graphs.includes("hips")) {
-              table_body += `<td>${s.hips}</td>`;
+              table_body += `<td data-th="Hips">${s.hips}</td>`;
             }
             if (graphs.includes("pant")) {
-              table_body += `<td>${s.pant}</td>`;
+              table_body += `<td data-th="Pant">${s.pant}</td>`;
             }
 
             table_body += `</tr>`;

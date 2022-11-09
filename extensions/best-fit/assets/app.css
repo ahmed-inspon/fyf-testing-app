@@ -1,67 +1,8 @@
-.img-responsive {
-    display: block;
-    max-width: 100%;
-    height: auto
-}
-
-.img-rounded {
-    border-radius: 6px
-}
-
-.img-thumbnail {
-    padding: 4px;
-    line-height: 1.42857143;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    -webkit-transition: all .2s ease-in-out;
-    -o-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
-    display: inline-block;
-    max-width: 100%;
-    height: auto
-}
-
-.img-circle {
-    border-radius: 50%
-}
-
-hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 0;
-    border-top: 1px solid #eee
-}
-
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0
-}
-
-.sr-only-focusable:active, .sr-only-focusable:focus {
-    position: static;
-    width: auto;
-    height: auto;
-    margin: 0;
-    overflow: visible;
-    clip: auto
-}
-
-[role="button"] {
-    cursor: pointer
-}
-
-.modal-open {
+.fyf-extension .modal-open {
     overflow: hidden
 }
 
-.modal {
+.fyf-extension .modal {
     background-color: #0c0c0c66;
     position: fixed;
     top: 0;
@@ -75,7 +16,7 @@ hr {
     outline: 0
 }
 
-.modal.fade .modal-dialog {
+.fyf-extension .modal.fade .modal-dialog {
     -webkit-transform: translate(0, -25%);
     -ms-transform: translate(0, -25%);
     -o-transform: translate(0, -25%);
@@ -85,25 +26,25 @@ hr {
     transition: transform 0.3s ease-out
 }
 
-.modal.in .modal-dialog {
+.fyf-extension .modal.in .modal-dialog {
     -webkit-transform: translate(0, 0);
     -ms-transform: translate(0, 0);
     -o-transform: translate(0, 0);
     transform: translate(0, 0)
 }
 
-.modal-open .modal {
+.fyf-extension .modal-open .modal {
     overflow-x: hidden;
     overflow-y: auto
 }
 
-.modal-dialog {
+.fyf-extension .modal-dialog {
     position: relative;
     width: auto;
     margin: 10px
 }
 
-.modal-content {
+.fyf-extension .modal-content {
     position: relative;
     height: 90vh;
     overflow-y: scroll;
@@ -120,7 +61,7 @@ hr {
     outline: 0
 }
 
-.modal-backdrop {
+.fyf-extension .modal-backdrop {
     position: fixed;
     top: 0;
     right: 0;
@@ -130,54 +71,54 @@ hr {
     background-color: #000
 }
 
-.modal-backdrop.fade {
+.fyf-extension .modal-backdrop.fade {
     filter: alpha(opacity=0);
     opacity: 0
 }
 
-.modal-backdrop.in {
+.fyf-extension .modal-backdrop.in {
     filter: alpha(opacity=50);
     opacity: .5
 }
 
-.modal-header {
+.fyf-extension .modal-header {
     padding: 15px
 }
 
-.modal-header .close {
+.fyf-extension .modal-header .close {
     margin-top: -2px
 }
 
-.modal-title {
+.fyf-extension .modal-title {
     margin: 0;
     line-height: 1.42857143
 }
 
-.modal-body {
+.fyf-extension .modal-body {
     position: relative;
     padding: 15px
 }
 
-.modal-footer {
+.fyf-extension .modal-footer {
     padding: 15px;
     text-align: right;
     border-top: 1px solid #e5e5e5
 }
 
-.modal-footer .btn+.btn {
+.fyf-extension .modal-footer .btn+.btn {
     margin-bottom: 0;
     margin-left: 5px
 }
 
-.modal-footer .btn-group .btn+.btn {
+.fyf-extension .modal-footer .btn-group .btn+.btn {
     margin-left: -1px
 }
 
-.modal-footer .btn-block+.btn-block {
+.fyf-extension .modal-footer .btn-block+.btn-block {
     margin-left: 0
 }
 
-.modal-scrollbar-measure {
+.fyf-extension .modal-scrollbar-measure {
     position: absolute;
     top: -9999px;
     width: 50px;
@@ -186,87 +127,52 @@ hr {
 }
 
 @media (min-width:768px) {
-    .modal-dialog {
+    .fyf-extension  .modal-dialog {
         min-width: 738px;
         max-width: 738px;
         margin: 30px auto
     }
 
-    .modal-content {
+    .fyf-extension  .modal-content {
         padding: 3rem;
         -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5)
     }
 
-    .modal-sm {
+    .fyf-extension  .modal-sm {
         width: 300px
     }
 }
 
 @media (min-width:992px) {
-    .modal-lg {
+    .fyf-extension .modal-lg {
         width: 900px
     }
 }
 
-.clearfix:before, .clearfix:after, .modal-header:before, .modal-header:after, .modal-footer:before, .modal-footer:after {
+.fyf-extension .modal-header:before,.modal-header:after,.modal-footer:before,.modal-footer:after {
     display: table;
     content: " "
 }
 
-.clearfix:after, .modal-header:after, .modal-footer:after {
+.fyf-extension .modal-header:after,.modal-footer:after {
     clear: both
 }
 
-.center-block {
-    display: block;
-    margin-right: auto;
-    margin-left: auto
-}
-
-.pull-right {
-    float: right !important
-}
-
-.pull-left {
-    float: left !important
-}
-
-.hide {
+.fyf-extension .hide {
     display: none !important
 }
 
-.show {
+.fyf-extension .show {
     display: block !important;
 }
 
-.invisible {
+.fyf-extension .invisible {
     visibility: hidden
 }
 
-.text-hide {
-    font: 0/0 a;
-    color: transparent;
-    text-shadow: none;
-    background-color: transparent;
-    border: 0
-}
-
-.hidden {
-    display: none !important
-}
-
-.affix {
-    position: fixed
-}
-
 #best-fit-div {
-    color: rgb(var(--color-foreground));
     display: none;
-    text-align: center;
-}
-.fyf-btn-title{
-    text-align: center;
 }
 
 .fyf-extension {
@@ -345,9 +251,7 @@ hr {
 .fyf-extension .btn-sec {
     margin-top: 2rem;
 }
-.fyf-extension .justify-content-center{
 
-}
 .fyf-extension .fyf-close-btn-title {
     position: absolute;
     top: 1.5rem;
@@ -550,11 +454,11 @@ input[type=number] {
 }
 
 .fyf-sizing-table th {
-    /* display: none; */
+    display: none;
 }
 
 .fyf-sizing-table td {
-    /* display: block; */
+    display: block;
 }
 
 .fyf-sizing-table td:first-child {
@@ -565,13 +469,13 @@ input[type=number] {
     margin-bottom: .5em;
 }
 
-/* .fyf-sizing-table td:before {
+.fyf-sizing-table td:before {
     content: attr(data-th) ": ";
     font-weight: bold;
     width: 120px;
     display: inline-block;
     color: #000;
-} */
+}
 
 .fyf-sizing-table th,
 .fyf-sizing-table td {
@@ -604,9 +508,9 @@ input[type=number] {
         background-color: #d8e7f3;
     }
 
-    /* .fyf-sizing-table td:before {
+    .fyf-sizing-table td:before {
         display: none;
-    } */
+    }
 
     .fyf-sizing-table th,
     .fyf-sizing-table td {
