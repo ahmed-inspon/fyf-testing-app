@@ -586,7 +586,7 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
       isProd ? PROD_INDEX_PATH : DEV_INDEX_PATH,
       "index.html"
     );
-    console.log("hello world4");
+    console.log("hello world4",isProd);
 
     return res
       .status(200)
