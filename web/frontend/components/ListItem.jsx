@@ -6,7 +6,7 @@ export const ListItem = (props) => {
     <StyledList>
       <div>
         {product.title}
-        {product.variants.map((variant, index) => {
+        {/* {product.variants.map((variant, index) => {
           if (variant.title === "Default Title") {
             return null;
           }
@@ -17,7 +17,7 @@ export const ListItem = (props) => {
               {index + 1 < product.variants.length ? ", " : null}
             </span>
           );
-        })}
+        })} */}
       </div>
 
       <span

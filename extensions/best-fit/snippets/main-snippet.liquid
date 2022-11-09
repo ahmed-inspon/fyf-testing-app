@@ -1,0 +1,168 @@
+<div id="best-fit-div">
+    <span class="fyf-recommend-title">We recommend you size </span><strong class="best-fit-recommended"></strong>
+  </div>
+  <div class="fyf-btn" data-toggle="modal" data-target="#exampleModal">
+    <span class="fyf-btn-title">Find Your Fit 📐</span>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal active " id="fyf-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content bgColor">
+        <div class="modal-header">
+          <h2 class="modal-title fontColor fyf-modal-title" id="exampleModalLabel">Find Your Fit</h2>
+          <button type="button" class="btn btn-secondary fontColor fyf-close-btn-title" data-dismiss="modal">Close</button>
+        </div>
+        <div class="modal-body">
+          <section class="cart-bar p-4 fontColor" id="cart-page-1">
+            <p class="fyf-modal-desc">Want to buy, but you are confused about your size?
+              We can help you find your fit for this store.
+            </p>
+            <div class="btn-sec d-flex justify-content-center mt-5">
+              <button id="step-1" class="btn btn-primary btn-rounded fyf-next-btn-title">Next</button>
+            </div>
+            <section class="fyf-modal-snippet">
+              <h3 class="fyf-table-heading">Clothing Chart</h3>
+              <small class="fyf-unit-info">All sizes are defined in (<span class="unit">inches</span>)</small>
+              <table class="fyf-sizing-table">
+                  <thead>
+                      <tr class="chart-head">
+                          <th>Size</th>
+                          <th>Neck</th>
+                          <th>Chest</th>
+                          <th>Shirt Length</th>
+                          <th>Waist</th>
+                          <th>Hips</th>
+                          <th>Pant Length</th>
+                      </tr>
+                  <thead>
+                  <tbody class="chart-body">
+              
+                  </tbody>
+              </table>
+              </section>
+          </Section>
+          <Section class="cart-bar p-4 fontColor" id="cart-page-2">
+            <p class="fontColor fyf-modal-desc2">Fill these measurements so that we can find best fit for you</p>
+            {% comment %} <div class="d-flex align-items-center form-field">
+              <label>Gender:</label> <span>
+                <input type="radio" name="gender" checked value="m"><label class="fontColor option">Men</label>
+                <input type="radio" name="gender" value="f"><label class="fontColor option">Women</label>
+              </span>
+            </div> {% endcomment %}
+  
+            <div class="d-flex align-items-center form-field">
+              <label>Unit:</label>
+              <span>
+                  <input type="radio" name="unit" checked value="cm"><label class="fontColor option">Centimeter</label>
+                  <input type="radio" name="unit" value="in"><label class="fontColor option">Inches</label>
+              </span>
+            </div>
+  
+            <div class="d-flex neck-input-group align-items-center form-field">
+              <label class="fontColor">Enter Your Neck:</label>
+              <span>
+                  <div class="md-form d-inline">
+                      <input type="number" id="neck" name="neck" class="form-control" autocomplete="off">
+                  </div>
+              </span>
+            </div>
+  
+            <div class="d-flex chest-input-group align-items-center form-field">
+              <label class="fontColor">Enter Your Chest:</label>
+              <span>
+                  <div class="md-form d-inline">
+                      <input type="number" id="chest" name="chest" class="form-control" autocomplete="off">
+                  </div>
+              </span>
+            </div>
+            <div class="d-flex sleeves-input-group align-items-center form-field">
+              <label class="fontColor">Enter Your Sleeves:</label>
+              <span>
+                  <div class="md-form d-inline">
+                      <input type="number" id="sleeves" name="sleeves" class="form-control" autocomplete="off">
+                  </div>
+              </span>
+            </div> 
+            <div class="d-flex shirt_length-input-group align-items-center form-field">
+              <label class="fontColor">Enter Your Shirt Length:</label>
+              <span>
+                  <div class="md-form d-inline">
+                      <input type="number" id="shirt_length" name="shirt_length" class="form-control" autocomplete="off">
+                  </div>
+              </span>
+            </div>
+  
+            <div class="d-flex waist-input-group align-items-center form-field">
+              <label class="fontColor">Enter Your Waist:</label>
+              <span>
+                <div class="md-form d-inline">
+                    <input type="number" id="waist" name="waist" class="form-control" autocomplete="off">
+                </div>
+              </span>
+            </div>
+  
+            <div class="d-flex hips-input-group align-items-center form-field">
+              <label class="fontColor">Enter Your Hips:</label> 
+              <span>
+                <div class="md-form d-inline">
+                    <input type="number" id="hips" name="hips" class="form-control" autocomplete="off">
+                </div>
+              </span>
+            </div>
+  
+            <div class="d-flex pant-input-group align-items-center form-field">
+              <label class="fontColor">Enter Your Pant Length:</label>
+              <span>
+                <div class="md-form d-inline">
+                    <input type="number" id="pant" name="pant" class="form-control" autocomplete="off">
+                </div>
+              </span>
+            </div>
+  
+            <div class="btn-sec d-flex justify-content-center mt-5">
+                <button id="step-1-back" class="btn btn-primary btn-rounded fyf-back-btn-title">Back</button>
+                <button id="step-2" class="btn btn-primary btn-rounded fyf-next-btn-title">Next</button>
+            </div>
+  
+  
+          </section>
+  
+        <section class="cart-bar" id="cart-page-3" style="display: none;">
+            <div class="text-center cart-thank-sec">
+                <h2 class="text-uppercase fontColor fyf-our-recommendation-title">Our Recommendation</h2>
+                <strong class="fontColor">We recommend you </strong> <span class="best-fit-recommended"></span> <strong>size</strong>
+                <br>
+                <i class="fontColor fyf-our-recommendation-desc">This size is recommended by matching your body measurement with stores defined measurement of their clothing</i>
+                <section class="fyf-modal-snippet">
+                  <h3 class="fyf-table-heading">Clothing Chart</h3>
+                  <small class="fyf-unit-info">All sizes are defined in (<span class="unit">inches</span>)</small>
+                  <table class="fyf-sizing-table">
+                      <thead>
+                          <tr class="chart-head">
+                              <th>Size</th>
+                              <th>Neck</th>
+                              <th>Chest</th>
+                              <th>Shirt Length</th>
+                              <th>Waist</th>
+                              <th>Hips</th>
+                              <th>Pant Length</th>
+                          </tr>
+                      <thead>
+                      <tbody class="chart-body">
+                  
+                      </tbody>
+                  </table>
+                  </section>
+              </div>
+  
+            <div class="btn-sec d-flex justify-content-around mt-5">
+                <button class="btn btn-primary btn-rounded px-4 step-3 fontColor"><i class="fas fa-redo mr-2"></i> <span class="fyf-start-btn-title">Start
+                    Again</span></button>
+            </div>
+        </section>
+  
+        </div>
+      </div>
+    </div>
+  </div>

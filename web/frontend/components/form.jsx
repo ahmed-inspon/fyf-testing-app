@@ -5,6 +5,7 @@ import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 import { Heading as HeadingWrapper,ListItem } from '../components';
 export default (props) => {
 
+    const fetch = useAuthenticatedFetch();
     const [id,setid] = useState(null);
     const [gender, setgender] = useState('m');
     const [chest, setchest] = useState('');
@@ -13,33 +14,71 @@ export default (props) => {
     const [neck, setneck] = useState('');
     const [hips, sethips] = useState('');
     const [pant, setpant] = useState('');
+    const [type, settype] = useState('');
     const [unit, setUnit] = useState("Centimeters");
     const [resourcePicker, toggleResourcePicker] = useState(false);
     const [products,setProducts] = useState([]);
+    const [sizes, setSizes] = useState([
+        { label: 'XS', value: 'xs', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+        { label: 'S', value: 's', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+        { label: 'M', value: 'm', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+        { label: 'L', value: 'l', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+        { label: 'XL', value: 'xl', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+        { label: '2XL', value: '2xl', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+        { label: '3XL', value: '3xl', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+
+    ]);
     const options = [
         { label: 'Male', value: 'm' },
         { label: 'Female', value: 'f' }
     ];
+    const types = [
+        { label: 'General Clothing', value: 'ge_ap',graphs:'neck,chest,shirt_length,sleeves,waist,hips,pant' },
+        { label: 'Women`s Shirts Without Sleeves', value: 'wo_sh',graphs:'neck,chest,shirt_length' },
+        { label: 'Women`s Shirts With Sleeves', value: 'wo_sh_sl',graphs:'neck,chest,shirt_length,sleeves' },
+        { label: 'Men`s Shirts Without Sleeves', value: 'me_sh',graphs:'neck,chest,shirt_length' },
+        { label: 'Men`s Shirts With Sleeves', value: 'me_sh_sl',graphs:'neck,chest,shirt_length,sleeves' },
+        { label: 'Women`s Pants', value: 'wo_pa',graphs:'waist,hips,pant' },
+        { label: 'Men`s Pants', value: 'me_pa' ,graphs:'waist,pant' },
+        { label: 'Men`s Shorts', value: 'me_sho' ,graphs:'waist' },
+    ]
+    const handleUnitChange = useCallback((value) => setUnit(value), []);
+
     useEffect(()=>{
         if(props.measurement){
             let measurement = props.measurement;
             setProducts(measurement.products);
             setgender(measurement.gender);
             setSizes(measurement.sizes);
+            console.log("size settings",measurement.sizes);
             settitle(measurement.title);
             setid(measurement._id);
+            setUnit(measurement.unit);
+            settype(measurement.type);
         }
-    },[])
-    const [sizes, setSizes] = useState([
-        { label: 'XS', value: 'xs', neck: '', chest: '', waist: '', hips: '', arms: '', shirt_length: '', pant: '' },
-        { label: 'S', value: 's', neck: '', chest: '', waist: '', hips: '', arms: '', shirt_length: '', pant: '' },
-        { label: 'M', value: 'm', neck: '', chest: '', waist: '', hips: '', arms: '', shirt_length: '', pant: '' },
-        { label: 'L', value: 'l', neck: '', chest: '', waist: '', hips: '', arms: '', shirt_length: '', pant: '' },
-        { label: 'XL', value: 'xl', neck: '', chest: '', waist: '', hips: '', arms: '', shirt_length: '', pant: '' },
-        { label: '2XL', value: '2xl', neck: '', chest: '', waist: '', hips: '', arms: '', shirt_length: '', pant: '' },
-        { label: '3XL', value: '3xl', neck: '', chest: '', waist: '', hips: '', arms: '', shirt_length: '', pant: '' },
 
-    ]);
+    },[])
+
+    const fetch_settings = async () =>{
+        const response = await fetch("/api/store_settings",{method:"GET",
+                  headers:{"accept":'application/json',"content-type":"application/json"}});
+        if(response.ok){
+          const resp = await response.json();
+          if(resp.data && resp.data){
+            // if(resp.data.appearance){
+            //   setappearance(resp.data.appearance);
+            // }
+            if(!props.measurement){
+                setUnit(resp.data.unit);
+            }
+          }     
+        }
+      }
+      useEffect(()=>{
+        fetch_settings();
+      },[])
+
+    
     //   const [measurements,setMeasurements] = useState([
     //     {size}
     //   ]);
@@ -49,22 +88,26 @@ export default (props) => {
     const handlegenderChange = useCallback((value) => setgender(value), []);
     const handlesizeChange = useCallback((s,key,value) =>
     {
+        console.log("sizes_before",sizes);
         let sizes_ = [...sizes];
         sizes_.forEach((a,i)=>{
-            if(a.label == s.label)
+            if(a.label == s.label && (value > 0 || value == ""))
             {
                 sizes_[i][key] = value;
             }
         })
+        console.log("sizes_after",sizes_);
         setSizes(sizes_);
-        console.log(sizes);
+        // console.log(sizes);
         // console.log(s,sizes_,key,valu    e);
     }
-    , []);
+    , [sizes]);
+
+    const handletypeChange = useCallback((value)=> settype(value),[]);
     const handletitleChange = useCallback((value) => settitle(value), []);
     const handlesubmit = () => {
         setLoading(true);
-        props.handlesubmit({id, gender, size, chest, waist, hips, neck, pant, unit,sizes,title,products }, () => {
+        props.handlesubmit({id,type, gender, size,  unit,sizes,title,products }, () => {
             setneck('');
             setchest('');
             setwaist('');
@@ -74,6 +117,88 @@ export default (props) => {
             setLoading(false);
         });
     }
+    const render_graph_header = useCallback(()=>{
+        let type_ = type;
+        let graph_ = types.filter((t)=>{return t.value == type_});
+        let graphs = ["neck","chest","shirt_length","waist","sleeves","hips","pant"];
+        if(graph_ && graph_.length)
+        {
+            graphs = graph_[0].graphs.split(",");
+        }
+        console.log("type",type_,graph_,graphs);
+        return (
+            <tr>
+            <th>Size</th>
+            {graphs.includes("neck") && <th>Neck</th>}
+            {graphs.includes("chest") && <th>Chest</th>}
+            {graphs.includes("sleeves") && <th>Sleeves</th>}
+            {graphs.includes("shirt_length") && <th>Shirt Length</th>}
+            {graphs.includes("waist") && <th>Waist</th>}
+            {graphs.includes("hips") && <th>Hips</th>}
+            {graphs.includes("pant") && <th>Pant Length</th>}
+            </tr>)
+    },[type]);
+
+    const render_graph_body = useCallback(()=>{
+        let type_ = type;
+        let graph_ = types.filter((t)=>{return t.value == type_});
+        let graphs = ["neck","chest","shirt_length","waist","sleeves","hips","pant"];
+        if(graph_ && graph_.length)
+        {
+            graphs = graph_[0].graphs.split(",");
+        }
+        return(
+            sizes.map((s) => {
+                return (
+                        <tr key={s.label}>
+                        <th>{s.label}</th>
+                        {graphs.includes("neck") && <td><TextField
+                            value={s.neck}
+                            type={"number"}
+                            onChange={(val)=>handlesizeChange(s,'neck',val)}
+                            autoComplete={s.value+"_neck"}                                    />
+                        </td>}
+                        {graphs.includes("chest") && <td><TextField
+                            value={s.chest}
+                            onChange={(val)=>handlesizeChange(s,'chest',val)}
+                            type="number"
+                            autoComplete={s.value+"_chest"}
+                        /></td>}
+                         {graphs.includes("sleeves") && <td><TextField
+                            value={s.sleeves}
+                            onChange={(val)=>handlesizeChange(s,'sleeves',val)}
+                            type="number"
+                            autoComplete={s.value+"_sleeves"}
+                        /></td>}
+                        {graphs.includes("shirt_length") && <td><TextField
+                            value={s.shirt_length}
+                            onChange={(val)=>handlesizeChange(s,'shirt_length',val)}
+                            type="number"
+                            autoComplete={s.value+"_length"}
+                        /></td>}
+                        {graphs.includes("waist") && <td><TextField
+                            value={s.waist}
+                            onChange={(val)=>handlesizeChange(s,'waist',val)}
+                            type="number"
+                            autoComplete={s.value+"_waist"}
+                        /></td> }
+                        {graphs.includes("hips") && <td><TextField
+                            value={s.hips}
+                            onChange={(val)=>handlesizeChange(s,'hips',val)}
+                            type="number"
+                            autoComplete={s.value+"_hips"}
+                        /></td> }
+                       {graphs.includes("pant") && <td><TextField
+                            value={s.pant}
+                            onChange={(val)=>handlesizeChange(s,'pant',val)}
+                            type="number"
+                            autoComplete={s.value+"_pant"}
+                        /></td> }
+                    </tr>
+                )
+            })
+        );
+    },[sizes,type])
     return (
         <Form onSubmit={handlesubmit}>
             
@@ -87,25 +212,25 @@ export default (props) => {
                 onChange={handletitleChange}
                 />
                 <Select
-                    label="Gender"
-                    options={options}
-                    onChange={handlegenderChange}
-                    value={gender}
+                      label="Measurement Unit"
+                      options={["Centimeters","Inches"]}
+                      onChange={handleUnitChange}
+                      value={unit}
+                  />
+                 <Select
+                    label="Apparel Type"
+                    options={types}
+                    onChange={handletypeChange}
+                    value={type}
                 />
-                <table border="1">
+                <hr />
+                <table style={{width:'100%'}}>
                     <thead>
-                        <tr>
-                            <th>Size</th>
-                            <th>Neck</th>
-                            <th>Chest</th>
-                            <th>Shirt Length</th>
-                            <th>Waist</th>
-                            <th>Hips</th>
-                            <th>Pant Length</th>
-                        </tr>
+                        {render_graph_header()}
                     </thead>
                     <tbody>
-                        {sizes && sizes.length &&
+                        {render_graph_body()}
+                        {/* {sizes && sizes.length &&
                             sizes.map((s) => {
                                 return (
                                     <tr key={s.label}>
@@ -149,18 +274,19 @@ export default (props) => {
                                     </tr>
                                 )
                             })
-                        }
+                        } */}
 
                     </tbody>
                 </table>
+                <hr/>
                 <HeadingWrapper size="16px" weight={400} style={{ marginBottom: 8 }}>
                     2. Select the product(s) you want this widget to be shown:
                 </HeadingWrapper>
                   <Button onClick={() => toggleResourcePicker(true)}>Select product(s)</Button>
                   <br />
-                {console.log("dddd",products)}
-                {products.map((product) => (
+                {products.map((product,index) => (
                 <ListItem
+                    key={index}
                     product={product}
                     onRemove={(productId) => {
                     const index = products.findIndex((item) => item.id == productId);
@@ -173,19 +299,20 @@ export default (props) => {
             </FormLayout>
             <ResourcePicker
         resourceType="Product"
+        showVariants={false}
         open={resourcePicker}
         onCancel={() => toggleResourcePicker(false)}
         onSelection={(products) => {
           toggleResourcePicker(false);
           const mappedProducts = products.selection.map((product) => ({
             id: product.id,
-            title: product.title,
-            variants: product.variants.map(({ id, title, displayName, selectedOptions }) => ({
-              id,
-              title,
-              displayName,
-              selectedOptions,
-            })),
+            title: product.title
+            // variants: product.variants.map(({ id, title, displayName, selectedOptions }) => ({
+            //   id,
+            //   title,
+            //   displayName,
+            //   selectedOptions,
+            // })),
           }));
           setProducts(mappedProducts);
         }}
@@ -193,7 +320,7 @@ export default (props) => {
         showDraftBadge={true}
         initialSelectionIds={products.map((product) => ({
           id: product.id,
-          variants: product.variants.map(({ id }) => ({ id })),
+        //   variants: product.variants.map(({ id }) => ({ id })),
         }))}
       />
         </Form>

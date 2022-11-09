@@ -3,10 +3,13 @@ import {
     Select,
     Button,
     TextStyle,
+    Icon,
     VideoThumbnail,
     SkeletonBodyText,
     Spinner,
   } from "@shopify/polaris";
+  import {CircleTickMinor,CircleCancelMinor} from '@shopify/polaris-icons';
+
   import { useEffect, useState, useRef } from "react";
   import styled from "styled-components";
   import {Heading} from "../components";
@@ -173,20 +176,15 @@ import {
                 <>
                   {themeData.is_block ? (
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_ASSET_PREFIX}/icons/success.svg`}
-                        style={{ marginRight: 8 }}
-                        alt="success-icon"
-                      />{" "}
-                      <TextStyle variation="positive">App connected with theme!</TextStyle>
+                      
+                      <Icon source={CircleTickMinor} color={"success"} style={{"margin":'0px'}}></Icon>
+                      <span style={{marginLeft:'1rem'}}></span>
+                      <TextStyle variation="positive" style={{marginLeft:'2rem'}}>App connected with theme!</TextStyle>
                     </div>
                   ) : (
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_ASSET_PREFIX}/icons/error.svg`}
-                        style={{ marginRight: 8 }}
-                        alt="error-icon"
-                      />{" "}
+                      <Icon source={CircleCancelMinor} color={"critical"} style={{"margin":'0px'}}></Icon>
+                      <span style={{marginLeft:'1rem'}}></span>
                       <TextStyle variation="negative">
                         App not connected with the theme!
                       </TextStyle>
@@ -215,7 +213,7 @@ import {
                   style={{ width: "80%" }}
                   onClick={() => {
                     redirect.dispatch(Redirect.Action.REMOTE, {
-                      url: `https://${store}/admin/themes/${value}/editor?context=apps&template=product&activateAppId=ab92ea17-5dbb-4f16-ac05-0ddb0b48990e/app-embed`,
+                      url: `https://${store}/admin/themes/${value}/editor?context=apps&template=product&activateAppId=f9901e53-c767-4506-a6f8-a3560b6b7626/app-embed`,
                       newContext: true,
                     });
                   }}
@@ -235,7 +233,7 @@ import {
                     }
                     onClick={() => {
                       redirect.dispatch(Redirect.Action.REMOTE, {
-                        url: `https://${store}/admin/themes/${value}/editor?template=product&activateAppId=76d59ff4-84f6-4fb8-84cb-ba018ca98d89/app-block`,
+                        url: `https://${store}/admin/themes/${value}/editor?template=product&activateAppId=f9901e53-c767-4506-a6f8-a3560b6b7626/app-block`,
                         newContext: true,
                       });
                     }}
@@ -243,12 +241,12 @@ import {
                     Add app block
                   </Button>
                 ) : null}
-                <p style={{ margin: "12px 0" }}>Come back to this tab and click “Next”!</p>
+                {/* <p style={{ margin: "12px 0" }}>Come back to this tab and click “Next”!</p>
                 {themeData.is_block ? (
                   <Button onClick={enablaTheme} loading={enableThemeLoading}>
                     Done
                   </Button>
-                ) : null}
+                ) : null} */}
               </div>
             </>
           )}

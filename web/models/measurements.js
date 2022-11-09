@@ -5,6 +5,8 @@ const schema = new mongoose.Schema({
     title:String,
     shop: String,
     size: String,
+    unit: String,
+    type:String,
     sizes:JSON,
     products:JSON,
     created_at:{

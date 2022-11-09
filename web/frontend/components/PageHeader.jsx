@@ -11,7 +11,7 @@ const PageHeader = ({ connectTheme, redirect }) => {
             <img
               style={{height:120}}
               alt="box-image"
-              src={`https://cdn.shopify.com/s/files/applications/43f209d1de11199bcc0391e276bbbd28_512x512.png?1666797925`}
+              src={`https://cdn.shopify.com/s/files/applications/acc3aa48fd49f34c2a9c0001ee80eb97_512x512.png?1667833868`}
             />
           </div>
 

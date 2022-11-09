@@ -1,4 +1,4 @@
-import { TitleBar } from '@shopify/app-bridge-react';
+import { TitleBar ,useNavigate} from '@shopify/app-bridge-react';
 import {FormLayout,Toast,Banner, Checkbox,Frame, TextField,Select, Button, Page, Layout, Card} from '@shopify/polaris';
 import {useState, useCallback, useEffect} from 'react';
 import { useAppQuery, useAuthenticatedFetch } from "../../hooks";
@@ -23,6 +23,7 @@ export default () => {
     {label: 'Male', value: 'm'},
     {label: 'Female', value: 'f'}
   ];
+  const navigate = useNavigate();
 
   const sizes = [
     {label: 'XS', value: 'xs'},
@@ -58,7 +59,8 @@ export default () => {
 
   const [banner, setbanner] = useState({active:false,"status":"info","title":"","details":""});
   const togglebanner = useCallback(() => setbanner({...banner,active:!banner.active}), []);
-  const toggletoast = useCallback(() => settoast({...toast,active:!toast.active}), []);
+  const offtoast = useCallback(() => settoast({...toast,active:false}), []);
+  const ontoast = useCallback(() => settoast({...toast,active:true}), []);
 
   const handlesubmit = async (measurement,cb) => {
     
@@ -74,7 +76,14 @@ export default () => {
             console.log("resp",resp);
             if(resp.success){
                 cb();
-                settoast({"active":true,"error":false,"title":"Measurement created"});
+                let mesg = "Measurement created";
+                if(id && id != "create"){
+                  mesg = "Measurement updated";
+                }
+                settoast({"active":true,"error":false,"title":mesg});
+                // setTimeout(()=>{
+                //   navigate("/");
+                // },2500);
             }
             else{
                 setbanner({"active":true,"error":true,"title":"Error","details":resp.error});
@@ -85,9 +94,11 @@ export default () => {
          cb();
         
   };
-  const toastMarkup = toast.active ? (
-    <Toast error={toast.error} content={toast.title} onDismiss={()=>{toggletoast()}}></Toast>
-  ): null;
+  const toastMarkup = useCallback(()=>{
+    return toast.active ? (
+      <Toast error={toast.error} content={toast.title} onDismiss={()=>{offtoast()}}></Toast>
+    ): null;
+  },[toast]) ;
   const handlegenderChange = useCallback((value) => setgender(value), []);
   const handlesizeChange = useCallback((value) => setsize(value), []);
   const handlewaistChange = useCallback((value) => setwaist(value), []);

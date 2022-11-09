@@ -1,11 +1,22 @@
-.img-responsive{display:block;max-width:100%;height:auto}.img-rounded{border-radius:6px}.img-thumbnail{padding:4px;line-height:1.42857143;background-color:#fff;border:1px solid #ddd;border-radius:4px;-webkit-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out;display:inline-block;max-width:100%;height:auto}.img-circle{border-radius:50%}hr{margin-top:20px;margin-bottom:20px;border:0;border-top:1px solid #eee}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);border:0}.sr-only-focusable:active,.sr-only-focusable:focus{position:static;width:auto;height:auto;margin:0;overflow:visible;clip:auto}[role="button"]{cursor:pointer}.modal-open{overflow:hidden}.modal{background-color:#0c0c0c66;position:fixed;top:0;right:0;bottom:0;left:0;z-index:1050;display:none;overflow:hidden;-webkit-overflow-scrolling:touch;outline:0}.modal.fade .modal-dialog{-webkit-transform:translate(0, -25%);-ms-transform:translate(0, -25%);-o-transform:translate(0, -25%);transform:translate(0, -25%);-webkit-transition:-webkit-transform 0.3s ease-out;-o-transition:-o-transform 0.3s ease-out;transition:transform 0.3s ease-out}.modal.in .modal-dialog{-webkit-transform:translate(0, 0);-ms-transform:translate(0, 0);-o-transform:translate(0, 0);transform:translate(0, 0)}.modal-open .modal{overflow-x:hidden;overflow-y:auto}.modal-dialog{position:relative;width:auto;margin:10px}.modal-content{position:relative;background-color:#fff;-webkit-background-clip:padding-box;background-clip:padding-box;border:1px solid #999;border:1px solid rgba(0,0,0,0.2);border-radius:6px;-webkit-box-shadow:0 2px 2px
+.img-responsive{display:block;max-width:100%;height:auto}.img-rounded{border-radius:6px}.img-thumbnail{padding:4px;line-height:1.42857143;background-color:#fff;border:1px solid #ddd;border-radius:4px;-webkit-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out;display:inline-block;max-width:100%;height:auto}.img-circle{border-radius:50%}hr{margin-top:20px;margin-bottom:20px;border:0;border-top:1px solid #eee}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);border:0}.sr-only-focusable:active,.sr-only-focusable:focus{position:static;width:auto;height:auto;margin:0;overflow:visible;clip:auto}[role="button"]{cursor:pointer}.modal-open{overflow:hidden}.modal{background-color:#0c0c0c66;position:fixed;top:0;right:0;bottom:0;left:0;z-index:1050;display:none;overflow:hidden;-webkit-overflow-scrolling:touch;outline:0}.modal.fade .modal-dialog{-webkit-transform:translate(0, -25%);-ms-transform:translate(0, -25%);-o-transform:translate(0, -25%);transform:translate(0, -25%);-webkit-transition:-webkit-transform 0.3s ease-out;-o-transition:-o-transform 0.3s ease-out;transition:transform 0.3s ease-out}.modal.in .modal-dialog{-webkit-transform:translate(0, 0);-ms-transform:translate(0, 0);-o-transform:translate(0, 0);transform:translate(0, 0)}.modal-open .modal{overflow-x:hidden;overflow-y:auto}.modal-dialog{position:relative;width:auto;margin:10px}.modal-content{position:relative;height:90vh;overflow-y:scroll;margin-top:5vh;margin-bottom:5vh;background-color:#fff;-webkit-background-clip:padding-box;background-clip:padding-box;border:1px solid #999;border:1px solid rgba(0,0,0,0.2);border-radius:6px;-webkit-box-shadow:0 2px 2px
 rgba(0,0,0,0.25);box-shadow:0 2px 2px rgba(0,0,0,0.25);outline:0}.modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#000}.modal-backdrop.fade{filter:alpha(opacity=0);opacity:0}.modal-backdrop.in{filter:alpha(opacity=50);opacity:.5}.modal-header{padding:15px}.modal-header .close{margin-top:-2px}.modal-title{margin:0;line-height:1.42857143}.modal-body{position:relative;padding:15px}.modal-footer{padding:15px;text-align:right;border-top:1px solid #e5e5e5}.modal-footer .btn+.btn{margin-bottom:0;margin-left:5px}.modal-footer .btn-group .btn+.btn{margin-left:-1px}.modal-footer .btn-block+.btn-block{margin-left:0}.modal-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}@media (min-width:768px){.modal-dialog{width:600px;margin:30px auto}.modal-content{padding:3rem;-webkit-box-shadow:0 5px 15px rgba(0,0,0,0.5);box-shadow:0 5px 15px rgba(0,0,0,0.5)}.modal-sm{width:300px}}@media (min-width:992px){.modal-lg{width:900px}}.clearfix:before,.clearfix:after,.modal-header:before,.modal-header:after,.modal-footer:before,.modal-footer:after{display:table;content:" "}.clearfix:after,.modal-header:after,.modal-footer:after{clear:both}.center-block{display:block;margin-right:auto;margin-left:auto}.pull-right{float:right !important}.pull-left{float:left !important}.hide{display:none !important}.show{display:block !important;}.invisible{visibility:hidden}.text-hide{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0}.hidden{display:none !important}.affix{position:fixed}
 #best-fit-div{display: none;}
 
 .fyf-extension{
+    display: none;
     font-family:'Montserrat, Helvetica, Arial, sans-serif';
     color:#0f0f0f;
 }
+.fyf-extension .neck-input-group,
+.chest-input-group,
+.sleeves-input-group,
+.shirt_length-input-group,
+.waist-input-group,
+.hips-input-group,
+.pant-input-group{
+    display: none;
+}
+
 .fyf-extension .fyf-modal-snippet .fyf-table-heading{
     text-align: center;
     font-weight: bold;
@@ -41,6 +52,16 @@ rgba(0,0,0,0.25);box-shadow:0 2px 2px rgba(0,0,0,0.25);outline:0}.modal-backdrop
     /* font-size: 1.4rem; */
     font-family: 'Montserrat, Helvetica, Arial, sans-serif';
 }
+.fyf-extension .fyf-unit-info{
+    text-align: right;
+    display: block;
+}
+.fyf-extension .fyf-sizing-table thead tr{
+    background-color: #d6d6d6;
+}
+.fyf-extension .fyf-sizing-table tr:nth-child(2n){
+    background-color: #d6d6d6;
+}
 .fyf-extension .fyf-sizing-table th,td{
     padding:0.25rem 0.5rem;
 }
@@ -57,17 +78,27 @@ rgba(0,0,0,0.25);box-shadow:0 2px 2px rgba(0,0,0,0.25);outline:0}.modal-backdrop
     font-size: 1.75rem;
     line-height: 2.25rem;
 }
+.fyf-extension .btn-sec{
+    margin-top:2rem;
+}
+.fyf-extension .fyf-close-btn-title{
+    position: absolute;
+    top:1.5rem;
+    right:1.5rem;
+    z-index: 100;
+}
 
 .fyf-extension .fyf-modal-desc2{
     font-size: 1.75rem;
     line-height: 2.25rem;
 }
 .fyf-extension .form-field{
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 .fyf-extension label{
-    font-size: 1.75rem;
+    font-size: 1.65rem;
     line-height: 1.75rem;
+    margin-bottom: 0.3rem;
 }
 .fyf-extension input {
     border-color:#0c0c0c;

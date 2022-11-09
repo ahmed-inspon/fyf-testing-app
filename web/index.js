@@ -1,6 +1,6 @@
 // @ts-check
 //
-//    https://3131-182-189-234-80.eu.ngrok.io?shop=fyf-testing.myshopify.com&host=ZnlmLXRlc3RpbmcubXlzaG9waWZ5LmNvbS9hZG1pbg
+// https://7e47-182-189-249-148.eu.ngrok.io?shop=fyf-test.myshopify.com&host=ZnlmLXRlc3QubXlzaG9waWZ5LmNvbS9hZG1pbg
 import { join } from "path";
 import { readFileSync } from "fs";
 import express, { response } from "express";
@@ -246,6 +246,8 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
     );
     let {shop,accessToken} = session;
     let theme_id = req.query.theme_id;
+    let blocks = null;
+    let data = [];
     if(!theme_id || theme_id == "" )
     {
         return res.status(400).json({success:false,"message":"theme_id is required in body"}); 
@@ -263,13 +265,16 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
 
         let if_block = false;
         if(settings_data?.current?.blocks){
-            const blocks = Object.keys(settings_data.current.blocks);
+            blocks = Object.keys(settings_data.current.blocks);
     
             blocks.forEach(block => {
             const current_block = settings_data.current.blocks[block];
             console.log("block",current_block.type); // use this line to find available block
-            if(current_block.type === 'shopify://apps/find-your-fit-test/blocks/app-embed/ab92ea17-5dbb-4f16-ac05-0ddb0b48990e'){
-                if(current_block.disabled === false){
+            
+            //dev blcok id ab92ea17-5dbb-4f16-ac05-0ddb0b48990e
+            let app_block_id = "f9901e53-c767-4506-a6f8-a3560b6b7626";
+            if(current_block.type === 'shopify://apps/find-your-fit-clothing-chart/blocks/app-embed/f9901e53-c767-4506-a6f8-a3560b6b7626'){
+                if(current_block.disabled == false){
                 if_block = true;
                 }
             }
@@ -492,8 +497,10 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
       // let chest = req.body.chest;
       let id = req.body.id;
       let sizes = req.body.sizes;
+      let type = req.body.type;
       let products = req.body.products;
       let title = req.body.title;
+      let unit = req.body.unit;
       let gender = req.body.gender;
       // let neck = req.body.neck;
       // let hips = req.body.hips;
@@ -508,11 +515,11 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
       if (id) {
         let exist = await measurements.findById(id);
         if(exist){
-          let update = await exist.update({sizes, title, products });
+          let update = await exist.update({sizes, title, products,type,unit});
           data = update;
         }
       } else {
-        let create = await measurements.create({ shop, sizes, title, products });
+        let create = await measurements.create({ shop, sizes, title, products,type,unit});
         data = create;
       }
       
