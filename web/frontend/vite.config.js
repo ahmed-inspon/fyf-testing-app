@@ -3,7 +3,10 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import https from "https";
 import react from "@vitejs/plugin-react";
-
+if (
+  process.env.npm_lifecycle_event === "build"){
+    console.info("Started development");
+  }
 if (
   process.env.npm_lifecycle_event === "build" &&
   !process.env.CI &&
