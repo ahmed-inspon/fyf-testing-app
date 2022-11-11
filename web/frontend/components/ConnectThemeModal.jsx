@@ -9,7 +9,7 @@ import {
     Spinner,
   } from "@shopify/polaris";
   import {CircleTickMinor,CircleCancelMinor} from '@shopify/polaris-icons';
-
+  import {video1} from '../assets';
   import { useEffect, useState, useRef } from "react";
   import styled from "styled-components";
   import {Heading} from "../components";
@@ -28,6 +28,7 @@ import {
     /**
      * States
      */
+    const [showVideo,setShowVideo] = useState(false);
     const [options, setOptions] = useState([]);
     const [value, setValue] = useState("");
     const [themeData, setThemeData] = useState({ is_block: false });
@@ -49,11 +50,14 @@ import {
     const checkOS = async ({ shop, theme_id }) => {
       try {
         const resp = await fetch('/api/os_check?theme_id='+theme_id);
+        setThemeOS({app_block:false});
         if(resp.ok){
-            let respjson = resp.json();
+            let respjson = await resp.json();
             console.log("respjson",respjson);
+            if(respjson && respjson.data){
+              setThemeOS({app_block:respjson.data});
+            }
         }
-        // setThemeOS(data);
       } catch (err) {
         console.log(errorHandler(err));
       }
@@ -140,12 +144,13 @@ import {
     };
   
     const closeModal = () => {
+      setShowVideo(false);
       onClose();
     };
-  
+   
     return (
       <Modal open={visible} onClose={closeModal} titleHidden={true}>
-        <StyledContent>
+       <StyledContent>
           <Heading>Connect Find Your Fit with theme storefront</Heading>
           <br />
           {false ? (
@@ -177,13 +182,13 @@ import {
                   {themeData.is_block ? (
                     <div style={{ display: "flex", alignItems: "center" }}>
                       
-                      <Icon source={CircleTickMinor} color={"success"} style={{"margin":'0px'}}></Icon>
+                      <span style={{"margin":'0px'}}><Icon source={CircleTickMinor} color={"success"}></Icon></span>
                       <span style={{marginLeft:'1rem'}}></span>
                       <TextStyle variation="positive" style={{marginLeft:'2rem'}}>App connected with theme!</TextStyle>
                     </div>
                   ) : (
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <Icon source={CircleCancelMinor} color={"critical"} style={{"margin":'0px'}}></Icon>
+                      <span style={{"margin":'0px'}}><Icon source={CircleCancelMinor} color={"critical"} style={{"margin":'0px'}}></Icon></span>
                       <span style={{marginLeft:'1rem'}}></span>
                       <TextStyle variation="negative">
                         App not connected with the theme!
@@ -192,25 +197,16 @@ import {
                   )}
                 </>
               )}
-  
-              <div style={{ width: 248, margin: "12px auto", textAlign: "center" }}>
-                <VideoThumbnail
-                  videoLength={90}
-                  thumbnailUrl="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
-                  showVideoProgress
-                />
-              </div>
-  
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
+                  marginTop: '1rem' 
                 }}
               >
                 <Button
-                  style={{ width: "80%" }}
                   onClick={() => {
                     redirect.dispatch(Redirect.Action.REMOTE, {
                       url: `https://${store}/admin/themes/${value}/editor?context=apps&template=product&activateAppId=f9901e53-c767-4506-a6f8-a3560b6b7626/app-embed`,
@@ -221,33 +217,50 @@ import {
                   Connect your theme
                 </Button>
   
-                {themeOS.app_block ? (
-                  <Button
-                    style={{ width: "80%", marginTop: 12 }}
-                    addOnBefore={
-                      <img
-                        alt="export-icon"
-                        style={{ marginRight: 8 }}
-                        src={`${process.env.NEXT_PUBLIC_ASSET_PREFIX}/icons/export.svg`}
-                      />
-                    }
-                    onClick={() => {
-                      redirect.dispatch(Redirect.Action.REMOTE, {
-                        url: `https://${store}/admin/themes/${value}/editor?template=product&activateAppId=f9901e53-c767-4506-a6f8-a3560b6b7626/app-block`,
-                        newContext: true,
-                      });
-                    }}
-                  >
-                    Add app block
-                  </Button>
+                {(false && themeOS.app_block) ? (
+                  <div                     style={{
+                    display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: '1rem' }}
+                  > <Button
+                  addOnBefore={
+                    <img
+                      alt="export-icon"
+                      style={{ marginRight: 8 }}
+                      src={`${process.env.NEXT_PUBLIC_ASSET_PREFIX}/icons/export.svg`}
+                    />
+                  }
+                  onClick={() => {
+                    redirect.dispatch(Redirect.Action.REMOTE, {
+                      url: `https://${store}/admin/themes/${value}/editor?template=product&activateAppId=f9901e53-c767-4506-a6f8-a3560b6b7626/app-block`,
+                      newContext: true,
+                    });
+                  }}
+                >
+                  Add App Block (OS 2.0)
+                </Button>
+
+                  </div>
+                  
                 ) : null}
-                {/* <p style={{ margin: "12px 0" }}>Come back to this tab and click “Next”!</p>
-                {themeData.is_block ? (
-                  <Button onClick={enablaTheme} loading={enableThemeLoading}>
-                    Done
-                  </Button>
-                ) : null} */}
               </div>
+          {showVideo ? (
+          <iframe width="560" style={{marginTop:'1rem'}} height="400" src="https://www.youtube.com/embed/zzopZBOBHCo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        ):(
+              <div style={{ width: 248, margin: "12px auto", textAlign: "center" }}>
+                <VideoThumbnail
+                  videoLength={48}
+                  thumbnailUrl={"https://i9.ytimg.com/vi/zzopZBOBHCo/mq1.jpg?sqp=CLj6uZsG&rs=AOn4CLCo-HS6sE-ROtjYp6FVKwaC3wOqpA"}
+                  showVideoProgress
+                  onClick={()=>{
+                    setShowVideo(true);
+                  }}
+                  
+                />
+              </div>
+        )}
             </>
           )}
         </StyledContent>

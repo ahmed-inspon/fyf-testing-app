@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import {Heading} from "../components";
 import { Redirect } from "@shopify/app-bridge/actions";
+import { useNavigate } from "@shopify/app-bridge-react";
 
 const PageHeader = ({ connectTheme, redirect }) => {
+  const navigate = useNavigate();
   return (
     <StyledHeader style={{ display: "flex", justifyContent: "space-between" }}>
       <section className="card card-1">
@@ -29,25 +31,20 @@ const PageHeader = ({ connectTheme, redirect }) => {
           <Heading size="16px">Help section</Heading>
           <div
             className="links"
+            role="button"
             onClick={() => {
-              redirect.dispatch(Redirect.Action.REMOTE, {
-                url: `https://inspon.com/docs/`,
-                newContext: true,
-              });
+              navigate('/faq');
             }}
           >
-            Knowledge Base
+            FAQ
           </div>
           <p
             className="links"
             onClick={() => {
-              redirect.dispatch(Redirect.Action.REMOTE, {
-                url: `https://inspon.com/setup-service/`,
-                newContext: true,
-              });
+              navigate('/need-help');
             }}
           >
-            Setup Service
+            Need Help?
           </p>
         </div>
 

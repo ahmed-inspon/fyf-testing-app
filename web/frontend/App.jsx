@@ -22,7 +22,7 @@ export default function App() {
               navigationLinks={[
                 {
                   label: "Create Measurement",
-                  destination: "/create",
+                  destination: "/measurements/create",
                 },
                 {
                   label: "Settings",
