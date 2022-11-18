@@ -71,8 +71,8 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
 // See the ensureBilling helper to learn more about billing in this template.
 const BILLING_SETTINGS = {
-  required: true,
-  test:process.env.PAYMENT == "TEST",
+  required: process.env.PAYMENT_REQUIRED == "true",
+  test:process.env.PAYMENT_TEST == "true",
   // This is an example configuration that would do a one-time charge for $5 (only USD is currently supported)
   chargeName: "Base Plan",
   amount: 2.9,
