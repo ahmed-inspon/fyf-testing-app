@@ -332,6 +332,12 @@ if (!window.fyf_app_extension) {
     if (!target_node) {
       target_node = document.querySelector("variant-selects");
     }
+    if(!target_node){
+      let _child_node = document.querySelector("quantity-input");
+      if(_child_node){
+        target_node = _child_node.parentElement;
+      }
+    }
     if(target_node){
       let embed_block = document.querySelector(".fyf-app-embed");
       target_node?.parentNode?.insertBefore(embed_block, target_node.nextSibling);
@@ -458,7 +464,8 @@ if (!window.fyf_app_extension) {
       modal.classList.toggle("show");
     }
   });
-  if(top?.window?.location && top?.window?.location?.href?.includes("admin/themes"))
+  if((top?.window?.location && top?.window?.location?.href?.includes("admin/themes"))||
+      (Shopify && Shopify.designMode))
   {
     document.querySelector(".fyf-extension").style.display = "block";
     console.log("theme editor opened!",document.querySelector(".fyf-extension"));

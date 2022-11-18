@@ -42,6 +42,7 @@ export default function HomePage() {
     plural: 'Measurements',
   };
   const [active, setActive] = useState(false);
+  const [storeSettings, setstoreSettings] = useState(null);
   const handleChange = useCallback(() => setActive(!active), [active]);
   const [deleteid,setdeleteid] = useState(null);
   const [deletionLoader,setdeletionloader] = useState(false);
@@ -91,6 +92,16 @@ export default function HomePage() {
       const resp = await response.json();
       if(resp.data && resp.data.measurements.length){
         setMeasurements(resp.data.measurements);
+        let store_settings_ = resp.data.store_settings;
+        if(store_settings_)
+        {
+          setstoreSettings(store_settings_);
+        }
+        if(!store_settings_ || 
+          (store_settings_ && !store_settings_.theme_setup)){
+            toggleConnectThemeModal(true);
+            set_theme_setup();
+          }
       }     
     }
   }
@@ -128,7 +139,20 @@ export default function HomePage() {
   const navigateHandler = () => {
     navigate('/measurements/create');
   }
-
+  const set_theme_setup = async()=>{
+    const response = await fetch("/api/set_theme_setup",{method:"POST",
+                                headers:{"accept":'application/json',
+                                         "content-type":"application/json"},
+                                body:JSON.stringify(obj)});
+    const resp = await response.json();
+        
+        if(response.ok){
+            console.log("resp",resp);
+            if(resp.success){
+              console.log(resp);
+            }
+        }
+  }
   const handleUpdate = async()=>{
     console.log(bgColor,fontColor,unit);
     let obj = {unit,bgColor,fontColor};

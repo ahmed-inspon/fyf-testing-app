@@ -368,6 +368,33 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
     res.status(status).send({ success: status === 200, error, data });
 
   })
+
+  app.post("/api/set_theme_setup", async (req, res) => {
+
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+    let status = 200;
+    let error = null;
+    let data = null;
+    try {
+      let shop = session?.shop;
+      let store_settings_ = await store_settings.update({ shop },
+        { theme_setup:true }, { upsert: true, setDefaultsOnInsert: true });
+      if (store_settings_) {
+        data = store_settings_;
+      }
+
+    } catch (e) {
+      console.log(`Failed to process /api/set_theme_setup: ${e.message}`);
+      status = 500;
+      error = e.message;
+    }
+    res.status(status).send({ success: status === 200, error, data });
+  })
+
   app.post("/api/store_settings", async (req, res) => {
 
     const session = await Shopify.Utils.loadCurrentSession(

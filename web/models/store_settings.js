@@ -5,7 +5,11 @@ const schema = new mongoose.Schema({
     unit: String,
     fontColors:String,
     bgColors:String,
-    appearance:JSON
+    appearance:JSON,
+    theme_setup:{
+        type:Boolean,
+        defaultValue:false
+    }
 });
 
 const store_settings = mongoose.model('store_settings', schema);
