@@ -65,7 +65,23 @@ export default function HomePage() {
   const store_url = app.hostOrigin.replace("https://","");
   const redirect = Redirect.create(app);
   const [connectThemeModal, toggleConnectThemeModal] = useState(false);
-
+  const get_type = useCallback((type)=>{
+    const types = [
+      { label: 'General Clothing', value: 'ge_ap',graphs:'neck,chest,shirt_length,sleeves,waist,hips,pant' },
+      { label: 'Women`s Shirts Without Sleeves', value: 'wo_sh',graphs:'neck,chest,shirt_length' },
+      { label: 'Women`s Shirts With Sleeves', value: 'wo_sh_sl',graphs:'neck,chest,shirt_length,sleeves' },
+      { label: 'Men`s Shirts Without Sleeves', value: 'me_sh',graphs:'neck,chest,shirt_length' },
+      { label: 'Men`s Shirts With Sleeves', value: 'me_sh_sl',graphs:'neck,chest,shirt_length,sleeves' },
+      { label: 'Women`s Pants', value: 'wo_pa',graphs:'waist,hips,pant' },
+      { label: 'Men`s Pants', value: 'me_pa' ,graphs:'waist,pant' },
+      { label: 'Men`s Shorts', value: 'me_sho' ,graphs:'waist' },
+  ]
+   let t = types.filter((t)=> t.value == type);
+   if(t && redirect.length){
+    return t[0].label;
+   }
+   return "";
+  },[]);
 
   const delete_measurement = async()=>{
     if(deleteid){
@@ -112,7 +128,7 @@ export default function HomePage() {
   const {selectedResources, allResourcesSelected, handleSelectionChange} =
     useIndexResourceState(measurements,{resourceIDResolver:(row)=>{return row._id}});
   const rowMarkup =  measurements.map(
-      ({_id,title,gender,products}, index) => (
+      ({_id,title,type,products}, index) => (
         <IndexTable.Row
           id={_id}
           key={_id}
@@ -122,7 +138,7 @@ export default function HomePage() {
           <IndexTable.Cell>
             <TextStyle variation="strong">{title}</TextStyle>
           </IndexTable.Cell>
-          <IndexTable.Cell>{gender}</IndexTable.Cell>
+          <IndexTable.Cell>{get_type(type)}</IndexTable.Cell>
           <IndexTable.Cell>{products.length}</IndexTable.Cell>
           <IndexTable.Cell><Button onClick={()=>{navigate('/measurements/'+_id)}}>
             <Icon source={EditMinor}></Icon></Button>
@@ -188,7 +204,7 @@ export default function HomePage() {
                 onSelectionChange={handleSelectionChange}
                 headings={[
                   {title: 'Title'},
-                  {title: 'Gender'},
+                  {title: 'Type'},
                   {title: 'Products'},
                   {title: 'Action'},
                 ]}
