@@ -252,7 +252,7 @@ import {
               <div style={{ width: 248, margin: "12px auto", textAlign: "center" }}>
                 <VideoThumbnail
                   videoLength={48}
-                  thumbnailUrl={"https://i9.ytimg.com/vi/zzopZBOBHCo/mq1.jpg?sqp=CLj6uZsG&rs=AOn4CLCo-HS6sE-ROtjYp6FVKwaC3wOqpA"}
+                  thumbnailUrl={"https://i.ibb.co/xLPN4sW/video-1.png"}
                   showVideoProgress
                   onClick={()=>{
                     setShowVideo(true);

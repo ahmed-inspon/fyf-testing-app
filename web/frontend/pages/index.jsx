@@ -77,7 +77,7 @@ export default function HomePage() {
       { label: 'Men`s Shorts', value: 'me_sho' ,graphs:'waist' },
   ]
    let t = types.filter((t)=> t.value == type);
-   if(t && redirect.length){
+   if(t && t.length){
     return t[0].label;
    }
    return "";
