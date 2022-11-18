@@ -142,8 +142,7 @@ export default function HomePage() {
   const set_theme_setup = async()=>{
     const response = await fetch("/api/set_theme_setup",{method:"POST",
                                 headers:{"accept":'application/json',
-                                         "content-type":"application/json"},
-                                body:JSON.stringify(obj)});
+                                         "content-type":"application/json"}});
     const resp = await response.json();
         
         if(response.ok){
