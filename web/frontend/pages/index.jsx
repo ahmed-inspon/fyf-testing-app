@@ -105,19 +105,19 @@ export default function HomePage() {
               headers:{"accept":'application/json',"content-type":"application/json"}});
     if(response.ok){
       const resp = await response.json();
+      let store_settings_ = resp?.data?.store_settings;
       if(resp.data && resp.data.measurements.length){
         setMeasurements(resp.data.measurements);
-        let store_settings_ = resp.data.store_settings;
         if(store_settings_)
         {
           setstoreSettings(store_settings_);
         }
-        if(!store_settings_ || 
-          (store_settings_ && !store_settings_.theme_setup)){
-            toggleConnectThemeModal(true);
-            set_theme_setup();
-          }
-      }     
+      }  
+      if(!store_settings_ || 
+        (store_settings_ && !store_settings_.theme_setup)){
+          toggleConnectThemeModal(true);
+          set_theme_setup();
+        }   
     }
   }
   useEffect(()=>{
