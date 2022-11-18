@@ -49,11 +49,11 @@
         <Section class="cart-bar p-4 fontColor" id="cart-page-2">
           <p class="fontColor fyf-modal-desc2">Fill these measurements so that we can find best fit for you</p>
           <div class="fyf-switch-wrapper">
-            <p class="label-text">Unit:</p>
+            {% comment %} <p class="label-text">Unit:</p> {% endcomment %}
             <div class="fyf-switch-field">
-              <input type="radio" name="unit" checked id="cm" value="cm"><label class="fontColor"
+              <input type="radio" name="unit" checked id="in" value="in"><label class="fontColor" for="in">Inches</label>
+              <input type="radio" name="unit" id="cm" value="cm"><label class="fontColor"
                 for="cm">Centimeter</label>
-              <input type="radio" name="unit" id="in" value="in"><label class="fontColor" for="in">Inches</label>
             </div>
           </div>
 
@@ -103,7 +103,8 @@
               <input type="number" id="pant" name="pant" class="fyf-form-control" autocomplete="off">
             </div>
           </div>
-
+          <div class="error-box">
+          </div>
           <div class="btn-sec  justify-content-center mt-5">
             <button id="step-1-back" class="btn btn-primary btn-rounded fyf-back-btn-title">Back</button>
             <button id="step-2" class="btn btn-primary btn-rounded fyf-next-btn-title">Next</button>

@@ -2,7 +2,6 @@
 // h2.innerHTML = "hello store"
 // let product_container = document.getElementsByClassName('product__info-container')[0];
 // product_container.append(h2);
-
 if (!window.fyf_app_extension) {
   const base_url = "https://fyf-shopify-app.sellquicky.com/";
 //   const base_url = "https://2a11-182-189-251-235.ap.ngrok.io/";
@@ -17,6 +16,11 @@ if (!window.fyf_app_extension) {
       .querySelector(".fyf-extension")
       .getAttribute("data-product-id");
   }
+  let modal = document.querySelector(".fyf-extension #fyf-modal");
+  let modal_page1 = document.querySelector(".fyf-extension #cart-page-1");
+  let modal_page2 = document.querySelector(".fyf-extension #cart-page-2");
+  let modal_page3 = document.querySelector(".fyf-extension #cart-page-3");
+
   let gender_setup = "";
   let measurements = [];
   let unit_input = null;
@@ -68,12 +72,12 @@ if (!window.fyf_app_extension) {
   // console.log("unit",product_id,unit_input.value);
 
   const init = async () => {
-    if (document.querySelector(".fyf-extension #cart-page-1")) {
-      document.querySelector(".fyf-extension #cart-page-1").style.display =
+    if (modal_page1) {
+      modal_page1.style.display =
         "block";
-      document.querySelector(".fyf-extension #cart-page-2").style.display =
+      modal_page2.style.display =
         "none";
-      document.querySelector(".fyf-extension #cart-page-3").style.display =
+      modal_page3.style.display =
         "none";
     }
 
@@ -237,16 +241,26 @@ if (!window.fyf_app_extension) {
         });
       }
     }
+    document.querySelectorAll('.fyf-form-control').forEach((el)=>{
+      el.addEventListener('keydown',(e)=>{
+          // Allow: backspace, delete, tab, escape, enter, ctrl+A and .
+        if ([46, 8, 9, 27, 13, 110, 190].indexOf(e.keyCode) !== -1 ||
+          (e.keyCode == 65 && e.ctrlKey === true) || 
+          (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+        }
+        var charValue = String.fromCharCode(e.keyCode)
+          , valid = /^[0-9]+$/.test(charValue);
+
+        if (!valid) {
+          e.preventDefault();
+        }
+      })
+    });
   };
   // https://54f7-182-189-253-118.eu.ngrok.io?shop=fyf-testing.myshopify.com&host=ZnlmLXRlc3RpbmcubXlzaG9waWZ5LmNvbS9hZG1pbg
-  document
-    .querySelector(".fyf-extension [data-toggle=modal]")
-    ?.addEventListener("click", function () {
-      document
-        .querySelector(".fyf-extension #fyf-modal")
-        .classList.toggle("show");
-    });
-
+ 
   document
     .querySelectorAll(".fyf-extension [data-dismiss=modal]")
     ?.forEach((el) => {
@@ -262,11 +276,11 @@ if (!window.fyf_app_extension) {
       // let gender = e.target.getAttribute('data-gender');
       // if(gender){
       //     gender_setup = gender;
-      document.querySelector(".fyf-extension #cart-page-1").style.display =
+      modal_page1.style.display =
         "none";
-      document.querySelector(".fyf-extension #cart-page-3").style.display =
+      modal_page3.style.display =
         "none";
-      document.querySelector(".fyf-extension #cart-page-2").style.display =
+      modal_page2.style.display =
         "block";
       // }
     });
@@ -280,156 +294,37 @@ if (!window.fyf_app_extension) {
   document
     .querySelector(".fyf-extension #step-2")
     ?.addEventListener("click", async () => {
-      let unit = document.querySelector(
-        ".fyf-extension input[type='radio'][name='unit']:checked"
-      ).value;
-      let measurement_unit = measurements.unit;
-      let neck = unit_conversion(neck_input.value, unit, measurement_unit);
-      let chest = unit_conversion(chest_input.value, unit, measurement_unit);
-      let sleeves = unit_conversion(
-        sleeves_input.value,
-        unit,
-        measurement_unit
-      );
-      let shirt_length = unit_conversion(
-        shirt_length_input.value,
-        unit,
-        measurement_unit
-      );
-      let waist = unit_conversion(waist_input.value, unit, measurement_unit);
-      let hips = unit_conversion(hips_input.value, unit, measurement_unit);
-      let pant = unit_conversion(pant_input.value, unit, measurement_unit);
-      console.log("neck", unit, neck_input.value, measurement_unit, neck);
-      console.log("unit", unit, measurement_unit);
-      let inputs = [];
-      inputs.neck = neck;
-      inputs.chest = chest;
-      inputs.sleeves = sleeves;
-      inputs.shirt_length = shirt_length;
-      inputs.waist = waist;
-      inputs.hips = hips;
-      inputs.pant = pant;
 
-      let type_ = measurements.type;
-      let graph_ = types.filter((t) => {
-        return t.value == type_;
-      });
-      let graphs = [
-        "neck",
-        "chest",
-        "sleeves",
-        "shirt_length",
-        "waist",
-        "hips",
-        "pant",
-      ];
-      if (graph_ && graph_.length) {
-        graphs = graph_[0].graphs.split(",");
+      hide_form_error();
+      //processing inputs
+      let inputs = fetch_inputs();
+      let graphs = filter_graph();
+      //validation
+      if(!validation_check(inputs,graphs)){
+        return;
       }
-      console.log("graphs", type_, measurements, graphs, graph_);
-      if (graphs.includes("neck")) {
-        if (neck <= 0 || isNaN(neck)) {
-          alert("wrong neck");
+      // suggested sizes
+      let suggested_sizes = filter_suggested_sizes(inputs,graphs);
+      // finding single most appropriate size
+      if(suggested_sizes.length){
+        let suggested_size = mode(suggested_sizes);
+        if (suggested_size) {
+          localStorage.setItem("fyf-best-fit-" + measurements._id, suggested_size);
+          render_suggested_size(suggested_size);
+          show_result_modal();
+          clear_form_inputs();
+          return;
         }
       }
-      if (graphs.includes("chest")) {
-        if (chest <= 0 || isNaN(chest)) {
-          alert("wrong chest");
-        }
+      else{
+        show_form_error("Oops! this size is not available.");
       }
-      if (graphs.includes("sleeves")) {
-        if (sleeves <= 0 || isNaN(sleeves)) {
-          alert("wrong sleeves");
-        }
-      }
-      if (graphs.includes("shirt_length")) {
-        if (shirt_length <= 0 || isNaN(shirt_length)) {
-          alert("wrong shirt_length");
-        }
-      }
-      if (graphs.includes("waist")) {
-        if (waist <= 0 || isNaN(waist)) {
-          alert("wrong waist");
-        }
-      }
-      if (graphs.includes("hips")) {
-        if (hips <= 0 || isNaN(hips)) {
-          alert("wrong hips");
-        }
-      }
-      if (graphs.includes("pant")) {
-        if (pant <= 0 || isNaN(pant)) {
-          alert("wrong pant");
-        }
-      }
-      let suggested_sizes = [];
-      graphs.forEach((g) => {
-        let sizes = measurements.sizes;
-        for (let i = 0; i < sizes.length; i++) {
-          console.log("ssss", inputs[g], sizes[i][g], sizes[i].label);
-          if (inputs[g] <= sizes[i][g]) {
-            suggested_sizes.push(sizes[i].label);
-            break;
-          }
-        }
-
-        // sizes.forEach((s)=>{
-        //     console.log(inputs[g] , s[g]);
-        //     if(inputs[g] <= s[g])
-        //     {
-        //         suggested_size.push(s.label);
-        //     }
-        // });
-
-        // measurements.sizes.forEach((s)=>{
-
-        // });
-      });
-      let mode_ = mode(suggested_sizes);
-      let suggested_size = mode_;
-      console.log("suggested", suggested_size);
-      if (suggested_size) {
-        localStorage.setItem("fyf-best-fit-" + measurements._id, suggested_size);
-        render_suggested_size(suggested_size);
-        show_result_modal();
-      }
-      console.log("mode", mode_);
-      console.log("ggggg", suggested_size, graphs, measurements);
-      return;
-      //old code
-      // if(measurements && measurements.length){
-      //    let measurements_ =  measurements.filter((m)=>{ return m.gender == gender_setup});
-      //    console.log("measuremen",measurements_,gender_setup);
-      //    if(measurements_ && measurements_.length){
-      //     chest_m = measurements_.sort((a,b)=>{
-      //         return a.chest - b.chest
-      //     });
-      //     let chest_size = "";
-      //     chest_m.forEach((c)=>{
-      //         if(c.chest >= chest && chest_size == ""){
-      //             chest_size = c.size;
-      //         }
-      //     })
-      //     console.log("chest_sizr",chest_size);
-      //     }
-      // }
-      document.querySelector(".fyf-extension #cart-page-1").style.display =
-        "none";
-      document.querySelector(".fyf-extension #cart-page-3").style.display =
-        "block";
-      document.querySelector(".fyf-extension #cart-page-2").style.display =
-        "none";
     });
 
   document
     .querySelector(".fyf-extension .step-3")
     ?.addEventListener("click", () => {
-      document.querySelector(".fyf-extension #cart-page-1").style.display =
-        "block";
-      document.querySelector(".fyf-extension #cart-page-3").style.display =
-        "none";
-      document.querySelector(".fyf-extension #cart-page-2").style.display =
-        "none";
+      start_again();
     });
   if (document.querySelector(".fyf-app-embed")) {
     // alert("added");
@@ -437,10 +332,10 @@ if (!window.fyf_app_extension) {
     if (!target_node) {
       target_node = document.querySelector("variant-selects");
     }
-    let embed_block = document.querySelector(".fyf-app-embed");
-    target_node.parentNode.insertBefore(embed_block, target_node.nextSibling);
-
-    console.log("rendering", target_node, embed_block);
+    if(target_node){
+      let embed_block = document.querySelector(".fyf-app-embed");
+      target_node?.parentNode?.insertBefore(embed_block, target_node.nextSibling);
+    }
   }
   const mode = (arr) => {
     let sizes_count = {};
@@ -519,20 +414,20 @@ if (!window.fyf_app_extension) {
   };
 
   const show_input_modal = () => {
-    document.querySelector(".fyf-extension #cart-page-1").style.display =
+    modal_page1.style.display =
       "block";
-    document.querySelector(".fyf-extension #cart-page-3").style.display =
+    modal_page3.style.display =
       "none";
-    document.querySelector(".fyf-extension #cart-page-2").style.display =
+    modal_page2.style.display =
       "none";
   };
 
   const show_result_modal = () => {
-    document.querySelector(".fyf-extension #cart-page-1").style.display =
+    modal_page1.style.display =
       "none";
-    document.querySelector(".fyf-extension #cart-page-3").style.display =
+    modal_page3.style.display =
       "block";
-    document.querySelector(".fyf-extension #cart-page-2").style.display =
+    modal_page2.style.display =
       "none";
   };
   const unit_conversion = (num, from, to) => {
@@ -558,20 +453,133 @@ if (!window.fyf_app_extension) {
     console.log("e.target", e.target, e.target.id);
     if (
       e.target?.id == "fyf-modal" &&
-      document
-        .querySelector(".fyf-extension #fyf-modal")
-        .classList.contains("show")
+      modal.classList.contains("show")
     ) {
-      document
-        .querySelector(".fyf-extension #fyf-modal")
-        .classList.toggle("show");
+      modal.classList.toggle("show");
     }
   });
-  // initialization;
-  if (document.URL.includes("products") && window.location.pathname.split("/").includes("products")){
-    init();
+  if(top?.window?.location && top?.window?.location?.href?.includes("admin/themes"))
+  {
+    document.querySelector(".fyf-extension").style.display = "block";
+    console.log("theme editor opened!",document.querySelector(".fyf-extension"));
   }
-  
+  else{
+    // initialization;
+    if (document.URL.includes("products") && window.location.pathname.split("/").includes("products")){
+      init();
+    }
+    document
+    .querySelector(".fyf-extension [data-toggle=modal]")
+    ?.addEventListener("click", function () {
+      modal.classList.toggle("show");
+    });
+
+  }
+  // helper functions
+  const fetch_inputs = () => {
+    let unit = document.querySelector(
+      ".fyf-extension input[type='radio'][name='unit']:checked"
+    ).value;
+    let measurement_unit = measurements.unit;
+
+    let inputs = {};
+      inputs.unit = unit;
+      inputs.neck = unit_conversion(neck_input.value, unit, measurement_unit);
+      inputs.chest = unit_conversion(chest_input.value, unit, measurement_unit);
+      inputs.sleeves = unit_conversion(sleeves_input.value,unit, measurement_unit);
+      inputs.shirt_length = unit_conversion(shirt_length_input.value,unit,measurement_unit);
+      inputs.waist = unit_conversion(waist_input.value, unit, measurement_unit);
+      inputs.hips = unit_conversion(hips_input.value, unit, measurement_unit);
+      inputs.pant = unit_conversion(pant_input.value, unit, measurement_unit);
+      return inputs;
+  }
+
+  const clear_form_inputs = () => {
+    neck_input.value = "";
+    chest_input.value = "";
+    sleeves_input.value = "";
+    shirt_length_input.value = "";
+    waist_input.value = "";
+    hips_input.value = "";
+    pant_input.value = "";
+
+  }
+
+  const validation_check = (inputs,graphs) =>{
+    let success = true;
+    let keys = Object.keys(inputs);
+    for(let i=0;i < keys.length ; i++){
+      let k = keys[i];
+      if (graphs.includes(k)) {
+        console.log("inputs[k]",inputs[k]);
+        if (inputs[k] <= 0 || isNaN(inputs[k])) {
+          show_form_error("Please enter valid "+k+" size")
+          return false;
+        }
+        if(inputs[k] >= 200 || inputs[k] <= 5)
+        {
+          show_form_error("Please enter realistic "+k+" size")
+          return false;
+        }
+      }
+    }
+    return success;
+  }
+
+  const filter_graph = ()=>{
+    let type_ = measurements.type;
+    let graph_ = types.filter((t) => {
+      return t.value == type_;
+    });
+    let graphs = [
+      "neck",
+      "chest",
+      "sleeves",
+      "shirt_length",
+      "waist",
+      "hips",
+      "pant",
+    ];
+    if (graph_ && graph_.length) {
+      graphs = graph_[0].graphs.split(",");
+    }
+    return graphs;
+  }
+  const filter_suggested_sizes = (inputs,graphs) =>{
+    let suggested_sizes = [];
+    graphs.forEach((g) => {
+      let sizes = measurements.sizes;
+      for (let i = 0; i < sizes.length; i++) {
+        if (inputs[g] <= sizes[i][g]) {
+          suggested_sizes.push(sizes[i].label);
+          break;
+        }
+      }
+    });
+    return suggested_sizes;
+  }
+  const show_form_error = (msg)=>{
+    if(document.querySelector(".fyf-extension .error-box")){
+      document.querySelector(".fyf-extension .error-box").style.display = "block";
+      document.querySelector(".fyf-extension .error-box").innerHTML = "⚠️"+msg
+    }
+  }
+
+  const hide_form_error = () =>{
+    if(document.querySelector(".fyf-extension .error-box")){
+    document.querySelector(".fyf-extension .error-box").style.display = "none";
+    document.querySelector(".fyf-extension .error-box").innerHTML = "";
+    }
+  }
+
+  const start_again = () =>{
+    modal_page1.style.display =
+    "none";
+  modal_page3.style.display =
+    "none";
+  modal_page2.style.display =
+    "block";
+  }
 }
 
 window.fyf_app_extension = true;
