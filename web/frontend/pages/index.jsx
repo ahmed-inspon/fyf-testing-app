@@ -63,12 +63,11 @@ export default function HomePage() {
    */
   const app = useAppBridge();
   const store_url = app.hostOrigin.replace("https://","");
-  console.log("app------------->",app);
   const redirect = Redirect.create(app);
   const [connectThemeModal, toggleConnectThemeModal] = useState(false);
 
 
-  const delete_measurement = useCallback(async()=>{
+  const delete_measurement = async()=>{
     if(deleteid){
       setdeletionloader(true);
       const response = await fetch("/api/measurements/"+deleteid,{method:"DELETE",
@@ -83,7 +82,7 @@ export default function HomePage() {
       handleChange();
       
     }
-  },[deleteid]) 
+  } 
 
   const fetch_measurements = async () =>{
     const response = await fetch("/api/measurements",{method:"GET",
@@ -146,9 +145,7 @@ export default function HomePage() {
     const resp = await response.json();
         
         if(response.ok){
-            console.log("resp",resp);
             if(resp.success){
-              console.log(resp);
             }
         }
   }
@@ -162,9 +159,7 @@ export default function HomePage() {
     const resp = await response.json();
         
         if(response.ok){
-            console.log("resp",resp);
             if(resp.success){
-              console.log(resp);
             }
         }
   }
@@ -183,6 +178,7 @@ export default function HomePage() {
               alignment="center"
             >
               <Stack.Item>
+              {(measurements && measurements.length) ?
               <IndexTable
                 resourceName={resourceName}
                 itemCount={measurements.length}
@@ -198,7 +194,9 @@ export default function HomePage() {
                 ]}
               >
                 {rowMarkup}
-              </IndexTable>
+              </IndexTable> : 
+              <Button onClick={()=>navigateHandler()}>Create Sizing Chart</Button>
+              }
               </Stack.Item>
             </Stack>
           </Card>

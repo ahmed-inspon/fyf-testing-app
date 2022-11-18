@@ -130,7 +130,6 @@ import {
       const resp = await response.json();
           
           if(response.ok){
-              console.log("resp",resp);
               if(resp.success){
                 console.log(resp);
               }
