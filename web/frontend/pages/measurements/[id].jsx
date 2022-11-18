@@ -81,9 +81,9 @@ export default () => {
                   mesg = "Measurement updated";
                 }
                 settoast({"active":true,"error":false,"title":mesg});
-                // setTimeout(()=>{
-                //   navigate("/");
-                // },2500);
+                setTimeout(()=>{
+                  navigate("/");
+                },2500);
             }
             else{
                 setbanner({"active":true,"error":true,"title":"Error","details":resp.error});

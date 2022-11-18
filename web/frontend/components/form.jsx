@@ -50,7 +50,6 @@ export default (props) => {
             setProducts(measurement.products);
             setgender(measurement.gender);
             setSizes(measurement.sizes);
-            console.log("size settings",measurement.sizes);
             settitle(measurement.title);
             setid(measurement._id);
             setUnit(measurement.unit);
