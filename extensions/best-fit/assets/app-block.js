@@ -103,6 +103,11 @@ if (!window.fyf_app_extension) {
         }
         console.log("measuremnet", measurements);
         if (measurements) {
+          //set unit
+          let {unit} = measurements;
+          document.querySelectorAll(".fyf-extension .unit").forEach((el) => {
+            el.innerHTML = unit;
+          });
           let best_fit = localStorage.getItem(
             "fyf-best-fit-" + measurements._id
           );
@@ -197,10 +202,8 @@ if (!window.fyf_app_extension) {
         // measurements = resp.data.measurements[0];
       }
       if (resp.data.store_settings) {
-        let { appearance, unit } = resp.data.store_settings;
-        document.querySelectorAll(".fyf-extension .unit").forEach((el) => {
-          el.innerHTML = unit;
-        });
+        let { appearance } = resp.data.store_settings;
+        
         document.querySelector(
           ".fyf-extension .fyf-recommend-title"
         ).innerText = appearance.recommend_title;
