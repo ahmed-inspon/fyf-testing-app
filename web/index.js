@@ -72,7 +72,7 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
 // See the ensureBilling helper to learn more about billing in this template.
 const BILLING_SETTINGS = {
   required: true,
-  test:process.env.NODE_ENV != "production",
+  test:process.env.PAYMENT == "TEST",
   // This is an example configuration that would do a one-time charge for $5 (only USD is currently supported)
   chargeName: "Base Plan",
   amount: 2.9,
