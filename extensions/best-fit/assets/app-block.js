@@ -5,13 +5,13 @@
 if (!window.fyf_app_extension) {
   const base_url = "https://fyf-shopify-app.sellquicky.com/";
 //   const base_url = "https://2a11-182-189-251-235.ap.ngrok.io/";
-  let store_name = null;
+  let store_name = Shopify.shop;
   let product_id = null;
   let sizes_order = ["3XL", "2XL", "XL", "L", "M", "S", "XS"];
   if (document.querySelector(".fyf-extension")) {
-    store_name = document
-      .querySelector(".fyf-extension")
-      .getAttribute("data-store-name");
+    // store_name = document
+    //   .querySelector(".fyf-extension")
+    //   .getAttribute("data-store-name");
     product_id = document
       .querySelector(".fyf-extension")
       .getAttribute("data-product-id");
