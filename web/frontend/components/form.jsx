@@ -87,7 +87,6 @@ export default (props) => {
     const handlegenderChange = useCallback((value) => setgender(value), []);
     const handlesizeChange = useCallback((s,key,value) =>
     {
-        console.log("sizes_before",sizes);
         let sizes_ = [...sizes];
         sizes_.forEach((a,i)=>{
             if(a.label == s.label && (value > 0 || value == ""))
@@ -95,10 +94,7 @@ export default (props) => {
                 sizes_[i][key] = value;
             }
         })
-        console.log("sizes_after",sizes_);
         setSizes(sizes_);
-        // console.log(sizes);
-        // console.log(s,sizes_,key,valu    e);
     }
     , [sizes]);
 
@@ -124,7 +120,6 @@ export default (props) => {
         {
             graphs = graph_[0].graphs.split(",");
         }
-        console.log("type",type_,graph_,graphs);
         return (
             <tr>
             <th>Size</th>

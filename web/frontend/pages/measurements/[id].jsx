@@ -18,7 +18,6 @@ export default () => {
   const [unit,setUnit] = useState("Centimeters");
   const [measurement,setMeasurement] = useState();
   const { id } = useParams();
-  console.log("id",id);
   const options = [
     {label: 'Male', value: 'm'},
     {label: 'Female', value: 'f'}
@@ -55,17 +54,16 @@ export default () => {
       setloading(false);
     }
   },[])
-  const [toast, settoast] = useState({active:false,"error":false,"title":""});
+  // const [toast, settoast] = useState({active:false,"error":false,"title":""});
 
   const [banner, setbanner] = useState({active:false,"status":"info","title":"","details":""});
   const togglebanner = useCallback(() => setbanner({...banner,active:!banner.active}), []);
-  const offtoast = useCallback(() => settoast({...toast,active:false}), []);
-  const ontoast = useCallback(() => settoast({...toast,active:true}), []);
+  // const offtoast = useCallback(() => settoast({...toast,active:false}), []);
+  // const ontoast = useCallback(() => settoast({...toast,active:true}), []);
 
   const handlesubmit = async (measurement,cb) => {
     
     // setloading(true);
-    // console.log("testing started",chest,waist,size);
     const response = await fetch("/api/measurements/create_update",{method:"POST",
                                 headers:{"accept":'application/json',
                                          "content-type":"application/json"},
@@ -73,17 +71,17 @@ export default () => {
     const resp = await response.json();
         
         if(response.ok){
-            console.log("resp",resp);
             if(resp.success){
                 cb();
                 let mesg = "Measurement created";
                 if(id && id != "create"){
                   mesg = "Measurement updated";
                 }
-                settoast({"active":true,"error":false,"title":mesg});
                 setTimeout(()=>{
-                  navigate("/");
+                  console.log("testing")
+                  navigate("/",{target:'self'});
                 },2500);
+                // settoast({"active":true,"error":false,"title":mesg});
             }
             else{
                 setbanner({"active":true,"error":true,"title":"Error","details":resp.error});
@@ -94,11 +92,11 @@ export default () => {
          cb();
         
   };
-  const toastMarkup = useCallback(()=>{
-    return toast.active ? (
-      <Toast error={toast.error} content={toast.title} onDismiss={()=>{offtoast()}}></Toast>
-    ): null;
-  },[toast]) ;
+  // const toastMarkup = useCallback(()=>{
+  //   return toast.active ? (
+  //     <Toast error={toast.error} content={toast.title} onDismiss={()=>{offtoast()}}></Toast>
+  //   ): null;
+  // },[toast]) ;
   const handlegenderChange = useCallback((value) => setgender(value), []);
   const handlesizeChange = useCallback((value) => setsize(value), []);
   const handlewaistChange = useCallback((value) => setwaist(value), []);
@@ -125,7 +123,7 @@ export default () => {
                 ):null}
             </Layout.Section>
         </Layout>
-        {toastMarkup}
+        {/* {toastMarkup} */}
     </Page>
     </Frame>
    
