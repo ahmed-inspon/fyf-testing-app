@@ -105,9 +105,11 @@ if (!window.fyf_app_extension) {
         if (measurements) {
           //set unit
           let {unit} = measurements;
-          document.querySelectorAll(".fyf-extension .unit").forEach((el) => {
-            el.innerHTML = unit;
-          });
+          if(unit){
+            document.querySelectorAll(".fyf-extension .unit").forEach((el) => {
+              el.innerHTML = unit;
+            });
+          }
           let best_fit = localStorage.getItem(
             "fyf-best-fit-" + measurements._id
           );
@@ -203,45 +205,46 @@ if (!window.fyf_app_extension) {
       }
       if (resp.data.store_settings) {
         let { appearance } = resp.data.store_settings;
-        
-        document.querySelector(
-          ".fyf-extension .fyf-recommend-title"
-        ).innerText = appearance.recommend_title;
-        document.querySelector(".fyf-extension .fyf-btn-title").innerText =
-          appearance.btn_title;
-        document.querySelector(".fyf-extension .fyf-modal-title").innerText =
-          appearance.modal_title;
-        document.querySelector(".fyf-extension .fyf-modal-desc").innerText =
-          appearance.modal_desc;
-        document.querySelector(".fyf-extension .fyf-modal-desc2").innerText =
-          appearance.modal_desc2;
-        document.querySelector(".fyf-extension .fyf-next-btn-title").innerText =
-          appearance.next_btn_title;
-        document.querySelector(
-          ".fyf-extension .fyf-our-recommendation-title"
-        ).innerText = appearance.our_recommendation_title;
-        document.querySelector(
-          ".fyf-extension .fyf-our-recommendation-desc"
-        ).innerText = appearance.our_recommendation_desc;
-        document.querySelector(
-          ".fyf-extension .fyf-start-btn-title"
-        ).innerText = appearance.start_btn_title;
-        document.querySelector(
-          ".fyf-extension .fyf-close-btn-title"
-        ).innerText = appearance.close_btn_title;
-        document.querySelectorAll(".fyf-extension .bgColor").forEach((el) => {
-          el.style.backgroundColor = appearance.bg_color;
-        });
-        document.querySelectorAll(".fyf-extension .fontColor").forEach((el) => {
-          el.style.color = appearance.font_color;
-        });
-        document.querySelectorAll(".fyf-extension button").forEach((el) => {
-          el.style.backgroundColor = appearance.btn_bg_color;
-          el.style.borderColor = appearance.btn_border_color;
-        });
-        document.querySelectorAll(".fyf-extension input").forEach((el) => {
-          el.style.borderColor = appearance.btn_border_color;
-        });
+        if(appearance){
+          document.querySelector(
+            ".fyf-extension .fyf-recommend-title"
+          ).innerText = appearance.recommend_title;
+          document.querySelector(".fyf-extension .fyf-btn-title").innerText =
+            appearance.btn_title;
+          document.querySelector(".fyf-extension .fyf-modal-title").innerText =
+            appearance.modal_title;
+          document.querySelector(".fyf-extension .fyf-modal-desc").innerText =
+            appearance.modal_desc;
+          document.querySelector(".fyf-extension .fyf-modal-desc2").innerText =
+            appearance.modal_desc2;
+          document.querySelector(".fyf-extension .fyf-next-btn-title").innerText =
+            appearance.next_btn_title;
+          document.querySelector(
+            ".fyf-extension .fyf-our-recommendation-title"
+          ).innerText = appearance.our_recommendation_title;
+          document.querySelector(
+            ".fyf-extension .fyf-our-recommendation-desc"
+          ).innerText = appearance.our_recommendation_desc;
+          document.querySelector(
+            ".fyf-extension .fyf-start-btn-title"
+          ).innerText = appearance.start_btn_title;
+          document.querySelector(
+            ".fyf-extension .fyf-close-btn-title"
+          ).innerText = appearance.close_btn_title;
+          document.querySelectorAll(".fyf-extension .bgColor").forEach((el) => {
+            el.style.backgroundColor = appearance.bg_color;
+          });
+          document.querySelectorAll(".fyf-extension .fontColor").forEach((el) => {
+            el.style.color = appearance.font_color;
+          });
+          document.querySelectorAll(".fyf-extension button").forEach((el) => {
+            el.style.backgroundColor = appearance.btn_bg_color;
+            el.style.borderColor = appearance.btn_border_color;
+          });
+          document.querySelectorAll(".fyf-extension input").forEach((el) => {
+            el.style.borderColor = appearance.btn_border_color;
+          });
+        }
       }
     }
     document.querySelectorAll('.fyf-form-control').forEach((el)=>{
