@@ -132,7 +132,7 @@ export async function createServer(
   try {
     // let shop = session?.shop;
     let shop = req.query.shop;
-    shop = shop + ".myshopify.com";
+    // shop = shop + ".myshopify.com";
     // console.log("shop", shop);
     data.measurements = await measurements.find({ shop });
     data.store_settings = await store_settings.findOne({ shop });
