@@ -8,12 +8,12 @@ export default (props) => {
     const fetch = useAuthenticatedFetch();
     const [id,setid] = useState(null);
     const [gender, setgender] = useState('m');
-    const [chest, setchest] = useState('');
-    const [waist, setwaist] = useState('');
+    // const [chest, setchest] = useState('');
+    // const [waist, setwaist] = useState('');
     const [size, setsize] = useState('');
-    const [neck, setneck] = useState('');
-    const [hips, sethips] = useState('');
-    const [pant, setpant] = useState('');
+    // const [neck, setneck] = useState('');
+    // const [hips, sethips] = useState('');
+    // const [pant, setpant] = useState('');
     const [type, settype] = useState('');
     const [unit, setUnit] = useState("Centimeters");
     const [resourcePicker, toggleResourcePicker] = useState(false);
@@ -28,10 +28,10 @@ export default (props) => {
         { label: '3XL', value: '3xl', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
 
     ]);
-    const options = [
-        { label: 'Male', value: 'm' },
-        { label: 'Female', value: 'f' }
-    ];
+    // const options = [
+    //     { label: 'Male', value: 'm' },
+    //     { label: 'Female', value: 'f' }
+    // ];
     const types = [
         { label: 'General Clothing', value: 'ge_ap',graphs:'neck,chest,shirt_length,sleeves,waist,hips,pant' },
         { label: 'Women`s Shirts Without Sleeves', value: 'wo_sh',graphs:'neck,chest,shirt_length' },
@@ -103,12 +103,24 @@ export default (props) => {
     const handlesubmit = () => {
         setLoading(true);
         props.handlesubmit({id,type, gender, size,  unit,sizes,title,products }, () => {
-            setneck('');
-            setchest('');
-            setwaist('');
-            setsize('');
-            setpant('');
-            sethips('');
+            settitle("");
+            setProducts([]);
+            setSizes([
+                { label: 'XS', value: 'xs', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+                { label: 'S', value: 's', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+                { label: 'M', value: 'm', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+                { label: 'L', value: 'l', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+                { label: 'XL', value: 'xl', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+                { label: '2XL', value: '2xl', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+                { label: '3XL', value: '3xl', neck: '', chest: '', waist: '', hips: '', sleeves: '', shirt_length: '', pant: '' },
+        
+            ]);
+            // setneck('');
+            // setchest('');
+            // setwaist('');
+            // setsize('');
+            // setpant('');
+            // sethips('');
             setLoading(false);
         });
     }
