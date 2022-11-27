@@ -3,7 +3,7 @@
 // let product_container = document.getElementsByClassName('product__info-container')[0];
 // product_container.append(h2);
 if (!window.fyf_app_extension) {
-  const base_url = "https://fyf-shopify-app.sellquicky.com/";
+  const base_url = "https://fyf-app.sellquicky.com/";
 //   const base_url = "https://2a11-182-189-251-235.ap.ngrok.io/";
   let store_name = Shopify.shop;
   let product_id = null;

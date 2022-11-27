@@ -75,7 +75,7 @@ const BILLING_SETTINGS = {
   test:process.env.PAYMENT_TEST == "true",
   // This is an example configuration that would do a one-time charge for $5 (only USD is currently supported)
   chargeName: "Base Plan",
-  amount: 2.9,
+  amount: 2.99,
   currencyCode: "USD",
   trial:3,
   interval: BillingInterval.Every30Days,
