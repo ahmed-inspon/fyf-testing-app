@@ -112,6 +112,7 @@ async function requestPayment(
   }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
 
   let data;
+  try{
   if (isRecurring(interval)) {
     const mutationResponse = await requestRecurringPayment(client, returnUrl, {
       chargeName,
@@ -122,14 +123,15 @@ async function requestPayment(
     });
     data = mutationResponse.body.data.appSubscriptionCreate;
     console.log("mutationResponse.body.data",mutationResponse.body.data);
-  } else {
-    const mutationResponse = await requestSinglePayment(client, returnUrl, {
-      chargeName,
-      amount,
-      currencyCode,
-    });
-    data = mutationResponse.body.data.appPurchaseOneTimeCreate;
-  }
+  } 
+  // else {
+  //   const mutationResponse = await requestSinglePayment(client, returnUrl, {
+  //     chargeName,
+  //     amount,
+  //     currencyCode,
+  //   });
+  //   data = mutationResponse.body.data.appPurchaseOneTimeCreate;
+  // }
 
   if (data.userErrors.length) {
     throw new ShopifyBillingError(
@@ -139,6 +141,11 @@ async function requestPayment(
   }
 
   return data.confirmationUrl;
+  }
+  catch(err){
+    console.log("err=>",err);
+    return null
+  }
 }
 
 async function requestRecurringPayment(
@@ -159,17 +166,17 @@ async function requestRecurringPayment(
       },
     ],
     returnUrl,
-    test:process.env.PAYMENT_TEST,
+    test:process.env.PAYMENT_TEST == "true" ? true : false,
     // test: !isProd,
     trialDays: trial
   }
+  console.log(variables,"<= charge")
   const mutationResponse = await client.query({
     data: {
       query: RECURRING_PURCHASE_MUTATION,
       variables:variables ,
     },
   });
-  console.log(variables,"<= charge")
   if (mutationResponse.body.errors && mutationResponse.body.errors.length) {
     throw new ShopifyBillingError(
       "Error while billing the store",
