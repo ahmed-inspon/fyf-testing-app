@@ -165,7 +165,27 @@ async function requestRecurringPayment(
       },
     },
   });
-
+  console.log({
+    data: {
+      query: RECURRING_PURCHASE_MUTATION,
+      variables: {
+        name: chargeName,
+        lineItems: [
+          {
+            plan: {
+              appRecurringPricingDetails: {
+                interval,
+                price: { amount, currencyCode },
+              },
+            },
+          },
+        ],
+        returnUrl,
+        test: !isProd,
+        trialDays: trial
+      },
+    },
+  },"<= charge")
   if (mutationResponse.body.errors && mutationResponse.body.errors.length) {
     throw new ShopifyBillingError(
       "Error while billing the store",
