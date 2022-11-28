@@ -62,6 +62,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
       currentInstallations.body.data.currentAppInstallation.activeSubscriptions;
 
     for (let i = 0, len = subscriptions.length; i < len; i++) {
+      console.log("subscriptions[i].name",subscriptions[i].name,subscriptions[i].test)
       if (
         subscriptions[i].name === chargeName &&
         (!isProd || !subscriptions[i].test)
@@ -69,33 +70,34 @@ async function hasActivePayment(session, { chargeName, interval }) {
         return true;
       }
     }
-  } else {
-    let purchases;
-    let endCursor = null;
-    do {
-      const currentInstallations = await client.query({
-        data: {
-          query: ONE_TIME_PURCHASES_QUERY,
-          variables: { endCursor },
-        },
-      });
-      purchases =
-        currentInstallations.body.data.currentAppInstallation.oneTimePurchases;
+  } 
+  // else {
+  //   let purchases;
+  //   let endCursor = null;
+  //   do {
+  //     const currentInstallations = await client.query({
+  //       data: {
+  //         query: ONE_TIME_PURCHASES_QUERY,
+  //         variables: { endCursor },
+  //       },
+  //     });
+  //     purchases =
+  //       currentInstallations.body.data.currentAppInstallation.oneTimePurchases;
 
-      for (let i = 0, len = purchases.edges.length; i < len; i++) {
-        const node = purchases.edges[i].node;
-        if (
-          node.name === chargeName &&
-          (!isProd || !node.test) &&
-          node.status === "ACTIVE"
-        ) {
-          return true;
-        }
-      }
+  //     for (let i = 0, len = purchases.edges.length; i < len; i++) {
+  //       const node = purchases.edges[i].node;
+  //       if (
+  //         node.name === chargeName &&
+  //         (!isProd || !node.test) &&
+  //         node.status === "ACTIVE"
+  //       ) {
+  //         return true;
+  //       }
+  //     }
 
-      endCursor = purchases.pageInfo.endCursor;
-    } while (purchases.pageInfo.hasNextPage);
-  }
+  //     endCursor = purchases.pageInfo.endCursor;
+  //   } while (purchases.pageInfo.hasNextPage);
+  // }
 
   return false;
 }
