@@ -1,5 +1,6 @@
 import { Shopify } from "@shopify/shopify-api";
-
+import dotenv from 'dotenv';
+dotenv.config();
 export const BillingInterval = {
   OneTime: "ONE_TIME",
   Every30Days: "EVERY_30_DAYS",
