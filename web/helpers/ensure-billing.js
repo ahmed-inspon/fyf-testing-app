@@ -64,8 +64,8 @@ async function hasActivePayment(session, { chargeName, interval }) {
     for (let i = 0, len = subscriptions.length; i < len; i++) {
       console.log("subscriptions[i].name",subscriptions[i].name,subscriptions[i].test)
       if (
-        subscriptions[i].name === chargeName &&
-        (!isProd || !subscriptions[i].test)
+        subscriptions[i].name === chargeName 
+        // && (!isProd || !subscriptions[i].test)
       ) {
         return true;
       }
