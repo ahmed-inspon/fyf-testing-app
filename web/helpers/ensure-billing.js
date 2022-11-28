@@ -160,7 +160,7 @@ async function requestRecurringPayment(
           },
         ],
         returnUrl,
-        test,
+        test:true,
         // test: !isProd,
         trialDays: trial
       },
