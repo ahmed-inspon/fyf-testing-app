@@ -146,49 +146,30 @@ async function requestRecurringPayment(
   returnUrl,
   {trial, chargeName, amount, currencyCode, interval,test }
 ) {
+  let variables = {
+    name: chargeName,
+    lineItems: [
+      {
+        plan: {
+          appRecurringPricingDetails: {
+            interval,
+            price: { amount, currencyCode },
+          },
+        },
+      },
+    ],
+    returnUrl,
+    test:process.env.PAYMENT_TEST,
+    // test: !isProd,
+    trialDays: trial
+  }
   const mutationResponse = await client.query({
     data: {
       query: RECURRING_PURCHASE_MUTATION,
-      variables: {
-        name: chargeName,
-        lineItems: [
-          {
-            plan: {
-              appRecurringPricingDetails: {
-                interval,
-                price: { amount, currencyCode },
-              },
-            },
-          },
-        ],
-        returnUrl,
-        test:process.env.PAYMENT_TEST,
-        // test: !isProd,
-        trialDays: trial
-      },
+      variables:variables ,
     },
   });
-  console.log({
-    data: {
-      query: RECURRING_PURCHASE_MUTATION,
-      variables: {
-        name: chargeName,
-        lineItems: [
-          {
-            plan: {
-              appRecurringPricingDetails: {
-                interval,
-                price: { amount, currencyCode },
-              },
-            },
-          },
-        ],
-        returnUrl,
-        test: !isProd,
-        trialDays: trial
-      },
-    },
-  },"<= charge")
+  console.log(variables,"<= charge")
   if (mutationResponse.body.errors && mutationResponse.body.errors.length) {
     throw new ShopifyBillingError(
       "Error while billing the store",
