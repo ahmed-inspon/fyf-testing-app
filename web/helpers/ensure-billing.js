@@ -142,7 +142,7 @@ async function requestPayment(
 async function requestRecurringPayment(
   client,
   returnUrl,
-  {trial, chargeName, amount, currencyCode, interval }
+  {trial, chargeName, amount, currencyCode, interval,test }
 ) {
   const mutationResponse = await client.query({
     data: {
@@ -160,7 +160,8 @@ async function requestRecurringPayment(
           },
         ],
         returnUrl,
-        test: !isProd,
+        test,
+        // test: !isProd,
         trialDays: trial
       },
     },
