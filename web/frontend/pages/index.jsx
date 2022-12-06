@@ -1,6 +1,7 @@
 import {
   Card,
   Page,
+  Banner,
   Layout,
   TextContainer,
   Image,
@@ -8,7 +9,7 @@ import {
   Modal,
   Select,
   Link,
-  Heading,
+  // Heading,
   IndexTable,
   useIndexResourceState,
   TextStyle,
@@ -19,6 +20,7 @@ import {
   TextField,
   Label,
 } from "@shopify/polaris";
+import {Heading} from '../components';
 import {EditMinor,DeleteMinor} from '@shopify/polaris-icons';
 import { TitleBar,useNavigate } from "@shopify/app-bridge-react";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
@@ -42,6 +44,7 @@ export default function HomePage() {
     plural: 'Measurements',
   };
   const [active, setActive] = useState(false);
+  const [dataloading,setdataloading] = useState(true);
   const [storeSettings, setstoreSettings] = useState(null);
   const handleChange = useCallback(() => setActive(!active), [active]);
   const [deleteid,setdeleteid] = useState(null);
@@ -64,6 +67,8 @@ export default function HomePage() {
   const app = useAppBridge();
   const store_url = app.hostOrigin.replace("https://","");
   const redirect = Redirect.create(app);
+  const [banner1,setbanner1] = useState(true);
+  const [banner2,setbanner2] = useState(true);
   const [connectThemeModal, toggleConnectThemeModal] = useState(false);
   const get_type = useCallback((type)=>{
     const types = [
@@ -90,7 +95,7 @@ export default function HomePage() {
               headers:{"accept":'application/json',"content-type":"application/json"}});
       if(response.ok){
         const resp = await response.json();
-        if(resp.data && resp.data.measurements.length){
+        if(resp.data ){
           setMeasurements(resp.data.measurements);
         }     
       }
@@ -101,6 +106,7 @@ export default function HomePage() {
   } 
 
   const fetch_measurements = async () =>{
+    setdataloading(true);
     const response = await fetch("/api/measurements",{method:"GET",
               headers:{"accept":'application/json',"content-type":"application/json"}});
     if(response.ok){
@@ -111,6 +117,7 @@ export default function HomePage() {
         if(store_settings_)
         {
           setstoreSettings(store_settings_);
+          setdataloading(false);
         }
       }  
       if(!store_settings_ || 
@@ -119,6 +126,7 @@ export default function HomePage() {
           set_theme_setup();
         }   
     }
+    setdataloading(false);
   }
   useEffect(()=>{
     fetch_measurements();
@@ -154,6 +162,15 @@ export default function HomePage() {
   const navigateHandler = () => {
     navigate('/measurements/create');
   }
+
+  const contactSupport = () =>{
+    window.open('mailto:app-support@sellquicky.com', '_blank');
+  }
+
+  const enableAppWidget = () =>{
+    toggleConnectThemeModal(true);
+  }
+
   const set_theme_setup = async()=>{
     const response = await fetch("/api/set_theme_setup",{method:"POST",
                                 headers:{"accept":'application/json',
@@ -194,7 +211,24 @@ export default function HomePage() {
               alignment="center"
             >
               <Stack.Item>
-              {(measurements && measurements.length) ?
+                {banner1 ?
+                <div style={{'marginBottom':'2rem'}}>
+                <Banner title="Step 1" onDismiss={() => {setbanner1(false)}}>
+                  <Heading>Enable App Widget In Your Theme.</Heading>
+                  <div style={{marginBottom:'1rem'}}></div>
+                  <Button onClick={()=>toggleConnectThemeModal(true)}>Enable App Widget</Button>
+
+                </Banner>
+                </div>:null}
+              {((measurements && measurements.length) || dataloading) ?
+              <>
+              <div style={{marginTop:'1rem'}}></div>
+              <div style={{'display':'flex','justifyContent':'space-between'}}>
+                <Heading style={{textAlign:'left'}}>Size Charts</Heading>
+                <Button onClick={()=>navigateHandler()}>Create Sizing Chart</Button>
+
+              </div>
+              <div style={{marginBottom:'1rem'}}></div>
               <IndexTable
                 resourceName={resourceName}
                 itemCount={measurements.length}
@@ -210,12 +244,55 @@ export default function HomePage() {
                 ]}
               >
                 {rowMarkup}
-              </IndexTable> : 
-              <Button onClick={()=>navigateHandler()}>Create Sizing Chart</Button>
+              </IndexTable></> :
+              <div>
+                {(banner2 && !dataloading) ?
+                <Banner title="Step 2" onDismiss={() => {setbanner2(false)}}>
+                  <Heading>Define Your Sizes And Target Products On Which You Want To Show Charts. </Heading>
+                  <div style={{marginBottom:'1rem'}}></div>
+                  <Button onClick={()=>navigateHandler()}>Create Sizing Chart</Button>
+                </Banner> :                  
+                 <Button onClick={()=>navigateHandler()}>Create Sizing Chart</Button>}
+              </div>
               }
               </Stack.Item>
             </Stack>
           </Card>
+        </Layout.Section>
+        <Layout.Section>
+          
+            <Stack
+                wrap={false}
+                spacing="loose"
+                distribution="fill"
+                alignment="center"
+              >
+                <Stack.Item>
+                  <div
+                   >
+                    <Card title="Can't see App Widget?"
+                    sectioned
+                    primaryFooterAction={
+                      {content: 'Enable App Widget',onAction:enableAppWidget}}
+                    >
+                      <p>Make sure you enable App Widget on your currently active theme.</p>
+                      <p><strong>(Note)</strong> App Widget will still need a sizing chart and product selected.</p>
+                    </Card>
+                  </div>
+                </Stack.Item>
+                <Stack.Item>
+                  <div
+                   >
+                    <Card title="Stuck in setting up App?"
+                    sectioned
+                    primaryFooterAction={{content: 'Contact Support',onAction:contactSupport}}
+                    >
+                      <p>Do you need help enabling App-Widget, or any other query?</p>
+                      <p>Contact support to get your query resolved in less than 12 hours.</p>
+                    </Card>
+                  </div>
+                </Stack.Item>
+              </Stack>
         </Layout.Section>
       </Layout>
       <Modal

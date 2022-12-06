@@ -49,7 +49,7 @@ const PageHeader = ({ connectTheme, redirect }) => {
         </div>
 
         <button className="btn-2" onClick={connectTheme}>
-          Connect other Theme
+          Enable App Widget
         </button>
       </div>
     </StyledHeader>

@@ -1,6 +1,5 @@
 // @ts-check
-//
-//  https://b48b-182-189-233-71.ap.ngrok.io?shop=fyf-test.myshopify.com&host=ZnlmLXRlc3QubXlzaG9waWZ5LmNvbS9hZG1pbg  
+//    https://e8ab-192-140-145-172.in.ngrok.io?shop=fyf-test.myshopify.com&host=ZnlmLXRlc3QubXlzaG9waWZ5LmNvbS9hZG1pbg
 import { join } from "path";
 import { readFileSync } from "fs";
 import express, { response } from "express";
@@ -28,16 +27,17 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 // TODO: There should be provided by env vars
 const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/web/frontend/dist/`;
+let db_name = process.env.DB_NAME ?? "fyf"; 
 main().catch(err => console.log(err));
 async function main() {
-  await Mongoose.connect('mongodb+srv://sell-quicky-admin:SUYJGBqfQ5tOGFvj@cluster0.po1dbmb.mongodb.net/fyf');
-
+  await Mongoose.connect('mongodb+srv://sell-quicky-admin:SUYJGBqfQ5tOGFvj@cluster0.po1dbmb.mongodb.net/'+db_name);
+  console.log("db-name",db_name);
   // await Mongoose.connect('mongodb+srv://parnter_dashboard:XMe3Gbn3EtU6SXJh@cluster0.wdhsgsr.mongodb.net/fyf_test');
   // use `await Mongoose.connect('mongodb://user:password@localhost:27017/test');` if your database has auth enabled
 }
 const DB_PATH = `${process.cwd()}/database.sqlite`;
 // const sessionDb = new Shopify.Session.MongoDBSessionStorage(new URL("mongodb+srv://parnter_dashboard:XMe3Gbn3EtU6SXJh@cluster0.wdhsgsr.mongodb.net"), "fyf_test");
-const sessionDb = new Shopify.Session.MongoDBSessionStorage(new URL("mongodb+srv://sell-quicky-admin:SUYJGBqfQ5tOGFvj@cluster0.po1dbmb.mongodb.net"), "fyf");
+const sessionDb = new Shopify.Session.MongoDBSessionStorage(new URL("mongodb+srv://sell-quicky-admin:SUYJGBqfQ5tOGFvj@cluster0.po1dbmb.mongodb.net"), db_name);
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -296,11 +296,13 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
     );
     // try {
       const response = await axios.get(
-        `https://${process.env.SHOPIFY_API_KEY}:${session.accessToken}@${session.shop}/admin/api/2021-04/themes.json?`
+        `https://${process.env.SHOPIFY_API_KEY}:${session.accessToken}@${session.shop}/admin/api/2022-07/themes.json`,{
+          headers: { Accept: 'application/json', 'Accept-Encoding': 'identity' },
+        }
       );
       const data = response.data;
-      console.log("thmedata",data)
-      return res.status(200).json({ success: true, data });
+      console.log("thmedata",`https://${process.env.SHOPIFY_API_KEY}:${session.accessToken}@${session.shop}/admin/api/2022-07/themes.json`)
+      return res.status(200).json({ success: true,data,url:`https://${process.env.SHOPIFY_API_KEY}:${session.accessToken}@${session.shop}/admin/api/2022-07/themes.json` });
     // } catch (err) {
     //   console.log(err);
     //   return res.status(400).json({ success: false,err, message: "error in getting theme ids" });
@@ -468,7 +470,7 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
       console.log("shop", shop);
       let measurement = await measurements.findById(id);
       if(measurement){
-        measurement.delete();
+        await measurement.delete();
       }
       data.measurements = await measurements.find({ shop });
       

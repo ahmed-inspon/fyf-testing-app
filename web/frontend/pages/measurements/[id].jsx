@@ -80,7 +80,7 @@ export default () => {
                 setTimeout(()=>{
                   console.log("testing")
                   navigate("/",{target:'self'});
-                },2500);
+                },500);
                 // settoast({"active":true,"error":false,"title":mesg});
             }
             else{
@@ -108,7 +108,7 @@ export default () => {
   return (
     <Frame>
     <Page narrowWidth>
-      <TitleBar title={`Find Your Fit - ${(!loading && measurement ) ? "Update Measurement" : "Create Measurement"}`}/>
+      <TitleBar title={`Find Your Fit - ${(!loading && measurement ) ? "Update Sizing Chart" : "Create Sizing Chart"}`}/>
         {banner.active ?
         <Banner title={banner.title} status='critical' onDismiss={() => {togglebanner()}}>
             <p>{banner.details}</p>
