@@ -80,7 +80,7 @@ export default () => {
   return (
     <Frame>
     <Page narrowWidth>
-        <TitleBar title="Find Your Fit - Create Measurement"/>
+        <TitleBar title="Find Your Fit - Create Sizing Chart"/>
         {banner.active ?
         <Banner title={banner.title} status='critical' onDismiss={() => {togglebanner()}}>
             <p>{banner.details}</p>

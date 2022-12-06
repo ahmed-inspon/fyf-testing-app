@@ -21,8 +21,16 @@ export default function App() {
             <NavigationMenu
               navigationLinks={[
                 {
-                  label: "Create Measurement",
+                  label: "Create Sizing Chart",
                   destination: "/measurements/create",
+                },
+                {
+                  label: "Need Help?",
+                  destination: "/need-help",
+                },
+                {
+                  label: "FAQ",
+                  destination: "/faq",
                 },
                 {
                   label: "Settings",

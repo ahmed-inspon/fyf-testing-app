@@ -101,6 +101,10 @@ export default (props) => {
     const handletypeChange = useCallback((value)=> settype(value),[]);
     const handletitleChange = useCallback((value) => settitle(value), []);
     const handlesubmit = () => {
+        if(!products.length){
+            alert("Please choose product(s) to show App Widget.");
+            return
+        }
         setLoading(true);
         props.handlesubmit({id,type, gender, size,  unit,sizes,title,products }, () => {
             settitle("");
