@@ -76,12 +76,13 @@ const StyledHeader = styled.section`
   }
 
   .btn-2 {
-    background-color: #fdb20a;
+    background-color: rgb(0,128,96,1);
     border: none;
     outline: none;
     height: 32px;
     color: #fff;
     width: 100%;
+    font-weight:bold;
     position: absolute;
     bottom: 0;
     display: flex;

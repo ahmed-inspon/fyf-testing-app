@@ -1,5 +1,6 @@
 import { Shopify } from "@shopify/shopify-api";
 import dotenv from 'dotenv';
+import stores from "../models/stores.js";
 dotenv.config();
 export const BillingInterval = {
   OneTime: "ONE_TIME",
@@ -34,7 +35,6 @@ export default async function ensureBilling(
 
   let hasPayment;
   let confirmationUrl = null;
-
   if (await hasActivePayment(session, { chargeName, interval })) {
     hasPayment = true;
   } else {
@@ -71,6 +71,10 @@ async function hasActivePayment(session, { chargeName, interval }) {
       }
     }
   } 
+  let check_super_admin = await stores.findOne({shop:session.shop});
+  if(check_super_admin.super_admin){
+    return true;
+  }
   // else {
   //   let purchases;
   //   let endCursor = null;
