@@ -3,6 +3,7 @@ import { gdprTopics } from "@shopify/shopify-api/dist/webhooks/registry.js";
 
 import ensureBilling from "../helpers/ensure-billing.js";
 import redirectToAuth from "../helpers/redirect-to-auth.js";
+import stores from "../models/stores.js";
 
 export default function applyAuthMiddleware(
   app,
@@ -43,6 +44,61 @@ export default function applyAuthMiddleware(
           }
         }
       });
+
+      //install or update store in db
+      let store_ = await stores.findOne({shop:session.shop});
+      if(!store_){ //create new store
+        console.log("session.shop,session.accessToken ",session.shop,
+        session.accessToken);
+        const client = new Shopify.Clients.Graphql(
+          session.shop,
+          session.accessToken
+        );
+        let country = null;
+        let city = null;
+        let shop_owner = null;
+        let plan_name = null;
+        let email = null;
+        let phone = null;
+
+        let cq = await client.query({ data: `
+        {
+          shop {
+            name
+            plan{
+              displayName
+            }
+            email   
+          }
+        }` });
+        console.log("cq",cq);
+        if(cq && cq.body?.data && cq.body?.data?.shop){
+          let shop_ = cq.body?.data?.shop;
+          // city = shop_.billingAddress?.city;
+          // country = shop_.billingAddress?.country;
+          // phone = shop_.billingAddress?.phone;
+          // shop_owner = shop_.billingAddress?.name;
+          plan_name = shop_.plan?.displayName;
+          email = shop_.email;
+        }
+        await stores.create({
+          shop:session.shop,
+          first_installed_at:new Date(),
+          phone,
+          country,
+          city,
+          shop_owner,
+          plan_name,
+          email,
+          installed:true,
+          });
+      }
+      else{ // update existing store
+        await stores.where({shop:session.shop}).update({
+          last_installed_at:new Date(),
+          installed:true,
+        });
+      }
 
       // If billing is required, check if the store needs to be charged right away to minimize the number of redirects.
       if (billing.required) {

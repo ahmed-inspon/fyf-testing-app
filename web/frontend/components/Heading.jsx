@@ -11,8 +11,8 @@ export const Heading = (props) => {
 };
 
 Heading.defaultProps = {
-  size: "18px",
-  color: "#fdb20a",
+  size: "1.1rem",
+  color: "#0C506D",
   weight: 600,
 };
 
