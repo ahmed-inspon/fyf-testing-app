@@ -72,7 +72,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
     }
   } 
   let check_super_admin = await stores.findOne({shop:session.shop});
-  if(check_super_admin.super_admin){
+  if(check_super_admin && check_super_admin.super_admin){
     return true;
   }
   // else {
