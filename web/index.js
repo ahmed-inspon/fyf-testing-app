@@ -256,25 +256,26 @@ app.get('/api/check_block_in_theme' ,async (req,res) => {
     try{
         let get_settings_data = await axios.get('https://'+process.env.SHOPIFY_API_KEY+':'+ accessToken+
         '@'+shop + '/admin/api/2021-04/themes/'+theme_id+'/assets.json?asset[key]=config/settings_data.json');
-        if(get_settings_data.data){
-            get_settings_data = get_settings_data.data;
+        if(get_settings_data?.data){
+            get_settings_data = get_settings_data?.data;
         }
         // const get_settings_data = await assets_api.get_single_asset(shop, storeData.accessToken, theme_id, 'config/settings_data.json');
         // const settings_data = JSON.parse(get_settings_data.snippet.asset.value);
-        const settings_data = JSON.parse(get_settings_data.asset.value);
+        const settings_data = JSON.parse(get_settings_data?.asset?.value);
         console.log("settings_data",settings_data);
 
         let if_block = false;
         if(settings_data?.current?.blocks){
-            blocks = Object.keys(settings_data.current.blocks);
+            blocks = Object.keys(settings_data?.current?.blocks);
     
             blocks.forEach(block => {
-            const current_block = settings_data.current.blocks[block];
+            const current_block = settings_data?.current?.blocks[block];
             console.log("block",current_block.type); // use this line to find available block
             
             //dev blcok id ab92ea17-5dbb-4f16-ac05-0ddb0b48990e
             let app_block_id = "f9901e53-c767-4506-a6f8-a3560b6b7626";
-            if(current_block.type === 'shopify://apps/find-your-fit-clothing-chart/blocks/app-embed/f9901e53-c767-4506-a6f8-a3560b6b7626'){
+            //'shopify://apps/find-your-fit-clothing-chart/blocks/app-embed/f9901e53-c767-4506-a6f8-a3560b6b7626'
+            if(current_block.type.includes(app_block_id)){
                 if(current_block.disabled == false){
                 if_block = true;
                 }
